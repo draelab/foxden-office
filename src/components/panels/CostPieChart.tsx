@@ -1,4 +1,5 @@
 import { Cell, Pie, PieChart, ResponsiveContainer, Tooltip } from "recharts";
+import { useTranslation } from "react-i18next";
 import { generateAvatar3dColor } from "@/lib/avatar-generator";
 import { useOfficeStore } from "@/store/office-store";
 
@@ -13,6 +14,7 @@ function formatTokens(n: number): string {
 }
 
 export function CostPieChart() {
+  const { t } = useTranslation();
   const agentCosts = useOfficeStore((s) => s.agentCosts);
   const agents = useOfficeStore((s) => s.agents);
 
@@ -22,7 +24,7 @@ export function CostPieChart() {
   if (entries.length === 0) {
     return (
       <div className="flex h-24 items-center justify-center text-sm text-gray-500 dark:text-gray-400">
-        暂无成本数据
+        {t("empty.noCostData")}
       </div>
     );
   }

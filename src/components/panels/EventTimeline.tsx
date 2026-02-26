@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
 import type { AgentStream } from "@/gateway/types";
 import { STATUS_COLORS } from "@/lib/constants";
 import { useOfficeStore } from "@/store/office-store";
@@ -13,6 +14,7 @@ const STREAM_ICONS: Record<AgentStream, string> = {
 const MAX_DISPLAY = 50;
 
 export function EventTimeline() {
+  const { t } = useTranslation("panels");
   const eventHistory = useOfficeStore((s) => s.eventHistory);
   const selectAgent = useOfficeStore((s) => s.selectAgent);
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -50,7 +52,7 @@ export function EventTimeline() {
             }}
             className="rounded bg-blue-600 px-1.5 py-0.5 text-[10px] text-white"
           >
-            新事件 ↓
+            {t("eventTimeline.newEvents")}
           </button>
         </div>
       )}
@@ -81,7 +83,7 @@ export function EventTimeline() {
         </button>
       ))}
       {displayEvents.length === 0 && (
-        <div className="py-3 text-center text-xs text-gray-400 dark:text-gray-500">暂无事件</div>
+        <div className="py-3 text-center text-xs text-gray-400 dark:text-gray-500">{t("common:empty.noEvents")}</div>
       )}
     </div>
   );

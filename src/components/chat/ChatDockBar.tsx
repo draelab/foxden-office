@@ -1,10 +1,12 @@
 import { useState, useRef, useCallback } from "react";
+import { useTranslation } from "react-i18next";
 import { ChevronUp, ChevronDown, Send, Square, Paperclip } from "lucide-react";
 import TextareaAutosize from "react-textarea-autosize";
 import { useChatDockStore } from "@/store/console-stores/chat-dock-store";
 import { AgentSelector } from "./AgentSelector";
 
 export function ChatDockBar() {
+  const { t } = useTranslation("chat");
   const [input, setInput] = useState("");
   const [isComposing, setIsComposing] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
@@ -58,7 +60,7 @@ export function ChatDockBar() {
             type="button"
             onClick={toggleDock}
             className="rounded p-1 text-gray-400 hover:bg-gray-100 hover:text-gray-600 dark:hover:bg-gray-800 dark:hover:text-gray-300"
-            title={dockExpanded ? "收起对话" : "展开对话"}
+            title={dockExpanded ? t("dock.collapseDock") : t("dock.expandDock")}
           >
             {dockExpanded ? <ChevronDown className="h-4 w-4" /> : <ChevronUp className="h-4 w-4" />}
           </button>
@@ -68,7 +70,7 @@ export function ChatDockBar() {
         <button
           type="button"
           className="rounded p-1 text-gray-400 hover:bg-gray-100 hover:text-gray-600 dark:hover:bg-gray-800 dark:hover:text-gray-300"
-          title="附件（开发中）"
+          title={t("dock.attachmentWip")}
           onClick={() => {
             // Phase B: UI placeholder only
           }}
@@ -84,7 +86,7 @@ export function ChatDockBar() {
           onKeyDown={handleKeyDown}
           onCompositionStart={() => setIsComposing(true)}
           onCompositionEnd={() => setIsComposing(false)}
-          placeholder="输入消息... (Enter 发送, Shift+Enter 换行)"
+          placeholder={t("dock.placeholder")}
           maxRows={4}
           className="flex-1 resize-none rounded-lg border border-gray-200 bg-gray-50 px-3 py-1.5 text-sm outline-none transition-colors placeholder:text-gray-400 focus:border-blue-400 focus:bg-white dark:border-gray-700 dark:bg-gray-800 dark:placeholder:text-gray-500 dark:focus:border-blue-500 dark:focus:bg-gray-900"
         />
@@ -95,7 +97,7 @@ export function ChatDockBar() {
             type="button"
             onClick={() => abort()}
             className="rounded-lg bg-red-500 p-1.5 text-white transition-colors hover:bg-red-600"
-            title="停止"
+            title={t("common:actions.stop")}
           >
             <Square className="h-4 w-4" />
           </button>
@@ -109,7 +111,7 @@ export function ChatDockBar() {
                 ? "bg-blue-600 text-white hover:bg-blue-700"
                 : "bg-gray-200 text-gray-400 dark:bg-gray-700"
             }`}
-            title="发送"
+            title={t("common:actions.send")}
           >
             <Send className="h-4 w-4" />
           </button>

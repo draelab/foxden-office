@@ -1,10 +1,14 @@
+import { useTranslation } from "react-i18next";
+import { ZONES } from "@/lib/constants";
 import { useOfficeStore } from "@/store/office-store";
 
 interface ZoneLabelProps {
   zone: { x: number; y: number; width: number; height: number; label: string };
+  zoneKey: keyof typeof ZONES;
 }
 
-export function ZoneLabel({ zone }: ZoneLabelProps) {
+export function ZoneLabel({ zone, zoneKey }: ZoneLabelProps) {
+  const { t } = useTranslation("common");
   const theme = useOfficeStore((s) => s.theme);
   const isDark = theme === "dark";
   const textColor = isDark ? "#94a3b8" : "#475569";
@@ -27,7 +31,7 @@ export function ZoneLabel({ zone }: ZoneLabelProps) {
           border: `1px solid ${isDark ? "rgba(255,255,255,0.05)" : "rgba(0,0,0,0.05)"}`,
         }}
       >
-        {zone.label}
+        {t(`zones.${zoneKey}`)}
       </div>
     </foreignObject>
   );

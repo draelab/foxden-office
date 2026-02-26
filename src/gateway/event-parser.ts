@@ -1,4 +1,5 @@
 import type { AgentEventPayload, AgentVisualStatus, SpeechBubble, ToolInfo } from "./types";
+import i18n from "@/i18n";
 
 export interface ParsedAgentEvent {
   runId: string;
@@ -37,7 +38,7 @@ export function parseAgentEvent(event: AgentEventPayload): ParsedAgentEvent {
     case "error":
       return parseError(base, event);
     default:
-      base.summary = `unknown stream: ${event.stream}`;
+      base.summary = i18n.t("common:events.unknownStream", { stream: event.stream });
       return base;
   }
 }
@@ -49,21 +50,21 @@ function parseLifecycle(result: ParsedAgentEvent, event: AgentEventPayload): Par
     case "start":
     case "thinking":
       result.status = "thinking";
-      result.summary = phase === "start" ? "开始运行" : "思考中";
+      result.summary = phase === "start" ? i18n.t("common:events.startRunning") : i18n.t("common:events.thinking");
       break;
     case "end":
       result.status = "idle";
       result.clearTool = true;
       result.clearSpeech = true;
-      result.summary = "运行结束";
+      result.summary = i18n.t("common:events.runEnded");
       break;
     case "fallback":
       result.status = "error";
-      result.summary = "降级处理";
+      result.summary = i18n.t("common:events.fallback");
       break;
     default:
       result.status = "thinking";
-      result.summary = `lifecycle: ${phase ?? "unknown"}`;
+      result.summary = i18n.t("common:events.lifecycleUnknown", { phase: phase ?? "unknown" });
   }
 
   return result;
@@ -82,11 +83,11 @@ function parseTool(result: ParsedAgentEvent, event: AgentEventPayload): ParsedAg
     };
     result.incrementToolCount = true;
     result.toolRecord = { name, timestamp: event.ts };
-    result.summary = `调用工具: ${name}`;
+    result.summary = i18n.t("common:events.toolCall", { name });
   } else {
     result.status = "thinking";
     result.clearTool = true;
-    result.summary = `工具完成: ${name}`;
+    result.summary = i18n.t("common:events.toolDone", { name });
   }
 
   return result;
@@ -101,8 +102,8 @@ function parseAssistant(result: ParsedAgentEvent, event: AgentEventPayload): Par
 }
 
 function parseError(result: ParsedAgentEvent, event: AgentEventPayload): ParsedAgentEvent {
-  const message = (event.data.message as string) ?? "未知错误";
+  const message = (event.data.message as string) ?? i18n.t("common:errors.unknownError");
   result.status = "error";
-  result.summary = `错误: ${message}`;
+  result.summary = i18n.t("common:events.errorPrefix", { message });
   return result;
 }

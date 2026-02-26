@@ -1,4 +1,5 @@
 import { lazy, Suspense, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { useOfficeStore } from "@/store/office-store";
 
 const TokenLineChart = lazy(() =>
@@ -25,37 +26,38 @@ function TabSpinner() {
 type TabId = "overview" | "trend" | "topology" | "activity";
 
 export function MetricsPanel() {
+  const { t } = useTranslation("panels");
   const [activeTab, setActiveTab] = useState<TabId>("overview");
   const metrics = useOfficeStore((s) => s.globalMetrics);
 
+  const tabs: { id: TabId; label: string }[] = [
+    { id: "overview", label: t("metrics.tabs.overview") },
+    { id: "trend", label: t("metrics.tabs.trend") },
+    { id: "topology", label: t("metrics.tabs.topology") },
+    { id: "activity", label: t("metrics.tabs.activity") },
+  ];
+
   const cards = [
     {
-      label: "Active Agents",
+      label: t("metrics.activeAgents"),
       value: `${metrics.activeAgents}/${metrics.totalAgents}`,
       color: "#3b82f6",
     },
     {
-      label: "Total Tokens",
+      label: t("metrics.totalTokens"),
       value: formatTokens(metrics.totalTokens),
       color: "#22c55e",
     },
     {
-      label: "Collaboration",
+      label: t("metrics.collaboration"),
       value: `${Math.round(metrics.collaborationHeat)}%`,
       color: "#f97316",
     },
     {
-      label: "Token Rate",
-      value: `${metrics.tokenRate.toFixed(0)}/min`,
+      label: t("metrics.tokenRate"),
+      value: `${metrics.tokenRate.toFixed(0)}${t("metrics.tokenRateUnit")}`,
       color: "#a855f7",
     },
-  ];
-
-  const tabs: { id: TabId; label: string }[] = [
-    { id: "overview", label: "概览" },
-    { id: "trend", label: "趋势" },
-    { id: "topology", label: "拓扑" },
-    { id: "activity", label: "活跃" },
   ];
 
   return (
@@ -71,16 +73,16 @@ export function MetricsPanel() {
         ))}
       </div>
       <div className="flex gap-1 border-t border-gray-100 px-2 py-1 dark:border-gray-800">
-        {tabs.map((t) => (
+        {tabs.map((tab) => (
           <button
-            key={t.id}
+            key={tab.id}
             type="button"
-            onClick={() => setActiveTab(t.id)}
+            onClick={() => setActiveTab(tab.id)}
             className={`rounded px-2 py-0.5 text-[10px] ${
-              activeTab === t.id ? "bg-gray-200 font-medium dark:bg-gray-700 dark:text-gray-200" : "text-gray-600 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-800"
+              activeTab === tab.id ? "bg-gray-200 font-medium dark:bg-gray-700 dark:text-gray-200" : "text-gray-600 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-800"
             }`}
           >
-            {t.label}
+            {tab.label}
           </button>
         ))}
       </div>

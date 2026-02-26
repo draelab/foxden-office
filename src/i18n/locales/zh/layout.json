@@ -40,7 +40,7 @@
     "subAgents": "子智能体",
     "agentDetail": "智能体 详情",
     "eventTimeline": "事件时间轴",
-    "searchPlaceholder": "搜索 智能体...",
+    "searchPlaceholder": "搜索 Agent...",
     "filters": {
       "all": "全部",
       "active": "活跃",

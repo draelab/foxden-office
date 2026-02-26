@@ -1,11 +1,11 @@
 import { Html } from "@react-three/drei";
 import { useFrame } from "@react-three/fiber";
 import { useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
 import Markdown from "react-markdown";
 import type { Group } from "three";
 import type { VisualAgent } from "@/gateway/types";
 import { generateAvatar3dColor } from "@/lib/avatar-generator";
-import { STATUS_LABELS } from "@/lib/constants";
 import { position2dTo3d } from "@/lib/position-allocator";
 import { useOfficeStore } from "@/store/office-store";
 import { ErrorIndicator } from "./ErrorIndicator";
@@ -23,6 +23,7 @@ function easeOutBack(t: number): number {
 }
 
 export function AgentCharacter({ agent }: AgentCharacterProps) {
+  const { t } = useTranslation("common");
   const groupRef = useRef<Group>(null);
   const bodyRef = useRef<Group>(null);
   const spawnElapsed = useRef(0);
@@ -145,7 +146,7 @@ export function AgentCharacter({ agent }: AgentCharacterProps) {
       {hovered && (
         <Html position={[0, 1.1, 0]} center transform={false} style={{ pointerEvents: "none" }}>
           <div className="pointer-events-none whitespace-nowrap rounded bg-gray-800 px-2 py-1 text-[11px] text-white shadow">
-            {agent.name} — {STATUS_LABELS[agent.status]}
+            {agent.name} — {t(`agent.statusLabels.${agent.status}`)}
           </div>
         </Html>
       )}

@@ -1,4 +1,5 @@
 import type { AgentVisualStatus } from "@/gateway/types";
+import i18n from "@/i18n";
 
 export const SVG_WIDTH = 1200;
 export const SVG_HEIGHT = 700;
@@ -43,6 +44,14 @@ export const STATUS_LABELS: Record<AgentVisualStatus, string> = {
   error: "错误",
   offline: "离线",
 };
+
+export function getZoneLabel(zone: keyof typeof ZONES): string {
+  return i18n.t(`common:zones.${zone}`);
+}
+
+export function getStatusLabel(status: AgentVisualStatus): string {
+  return i18n.t(`common:agent.statusLabels.${status}`);
+}
 
 export const DESK_GRID_COLS = 4;
 export const DESK_GRID_ROWS = 3;

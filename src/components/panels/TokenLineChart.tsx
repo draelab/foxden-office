@@ -1,4 +1,5 @@
 import { Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
+import { useTranslation } from "react-i18next";
 import type { TokenSnapshot } from "@/gateway/types";
 import { PALETTE } from "@/lib/avatar-generator";
 import { useOfficeStore } from "@/store/office-store";
@@ -19,12 +20,13 @@ function formatTokens(n: number): string {
 }
 
 export function TokenLineChart() {
+  const { t } = useTranslation("panels");
   const tokenHistory = useOfficeStore((s) => s.tokenHistory);
 
   if (tokenHistory.length < 2) {
     return (
       <div className="flex h-48 items-center justify-center text-sm text-gray-500 dark:text-gray-400">
-        暂无数据，等待 usage 数据...
+        {t("common:empty.waitingUsageData")}
       </div>
     );
   }
@@ -63,7 +65,7 @@ export function TokenLineChart() {
             }
             const total = p.total as number;
             const lines = [
-              <div key="total">总: {formatTokens(total)}</div>,
+              <div key="total">{t("tokenChart.total")} {formatTokens(total)}</div>,
               ...topAgentIds.map((aid, i) => {
                 const v = (p[aid] as number) ?? 0;
                 return (
@@ -87,7 +89,7 @@ export function TokenLineChart() {
           stroke="#3b82f6"
           strokeWidth={2}
           dot={false}
-          name="总量"
+          name={t("tokenChart.totalLine")}
         />
         {topAgentIds.map((aid, i) => (
           <Line

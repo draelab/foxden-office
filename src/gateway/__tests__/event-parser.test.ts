@@ -1,6 +1,7 @@
 import { describe, it, expect } from "vitest";
 import { parseAgentEvent } from "@/gateway/event-parser";
 import type { AgentEventPayload } from "@/gateway/types";
+import i18n from "@/i18n";
 
 function makeEvent(overrides: Partial<AgentEventPayload>): AgentEventPayload {
   return {
@@ -18,7 +19,7 @@ describe("parseAgentEvent", () => {
     it("phase=start → thinking", () => {
       const result = parseAgentEvent(makeEvent({ stream: "lifecycle", data: { phase: "start" } }));
       expect(result.status).toBe("thinking");
-      expect(result.summary).toBe("开始运行");
+      expect(result.summary).toBe(i18n.t("common:events.startRunning"));
     });
 
     it("phase=thinking → thinking", () => {

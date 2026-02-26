@@ -1,0 +1,55 @@
+{
+  "dashboard": {
+    "title": "仪表盘",
+    "description": "系统概览：Gateway 状态、渠道连接、技能启用情况",
+    "comingSoon": "仪表盘 即将上线",
+    "waitingPhase": "等待 Phase C 实现完整功能"
+  },
+  "channels": {
+    "title": "Channels",
+    "description": "管理消息渠道：Telegram、Discord、飞书 等",
+    "comingSoon": "渠道 管理即将上线",
+    "waitingPhase": "等待 Phase C 实现完整功能"
+  },
+  "skills": {
+    "title": "Skills",
+    "description": "管理技能与插件：安装、启停、配置",
+    "comingSoon": "Skills 管理即将上线",
+    "waitingPhase": "等待 Phase C 实现完整功能"
+  },
+  "cron": {
+    "title": "Cron Tasks",
+    "description": "管理定时任务：创建、编辑、启停、立即执行",
+    "comingSoon": "Cron 任务管理即将上线",
+    "waitingPhase": "等待 Phase C 实现完整功能"
+  },
+  "settings": {
+    "title": "Settings",
+    "description": "应用设置：主题、Provider、Gateway、更新",
+    "comingSoon": "Settings 即将上线",
+    "waitingPhase": "等待 Phase D 实现完整功能"
+  },
+  "viewModels": {
+    "statusLabels": {
+      "connected": "已连接",
+      "disconnected": "未连接",
+      "connecting": "连接中",
+      "error": "错误"
+    },
+    "taskStatus": {
+      "active": "活跃",
+      "paused": "已暂停"
+    },
+    "schedule": {
+      "daily": "每天 {{time}}",
+      "weekly": "每周 {{day}} {{time}}",
+      "every": "每 {{minutes}}m",
+      "at": "于 {{time}}",
+      "unknown": "未知"
+    },
+    "skillSource": {
+      "builtIn": "内置",
+      "marketplace": "市场"
+    }
+  }
+}

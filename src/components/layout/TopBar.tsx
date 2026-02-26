@@ -92,7 +92,7 @@ function OfficeTopBarContent({
       <ViewModeSwitch viewMode={viewMode} setViewMode={setViewMode} webglAvailable={webglAvailable} isMobile={isMobile} />
       <div className="mx-8 flex items-center gap-6 text-sm text-gray-500 dark:text-gray-400">
         <span>{t("topbar.activeCountText")} <strong className="text-gray-800 dark:text-gray-200">{metrics.activeAgents}/{metrics.totalAgents}</strong></span>
-        <span>Tokens <strong className="text-gray-800 dark:text-gray-200">{formatTokens(metrics.totalTokens)}</strong></span>
+        <span>{t("topbar.tokensLabel")} <strong className="text-gray-800 dark:text-gray-200">{formatTokens(metrics.totalTokens)}</strong></span>
       </div>
     </>
   );

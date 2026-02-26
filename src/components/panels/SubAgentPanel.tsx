@@ -1,23 +1,25 @@
 import { Avatar } from "@/components/shared/Avatar";
 import type { AgentVisualStatus } from "@/gateway/types";
-import { STATUS_COLORS, STATUS_LABELS } from "@/lib/constants";
+import { useTranslation } from "react-i18next";
+import { STATUS_COLORS } from "@/lib/constants";
 import { useOfficeStore } from "@/store/office-store";
 
 export function SubAgentPanel() {
+  const { t } = useTranslation();
   const agents = useOfficeStore((s) => s.agents);
   const selectAgent = useOfficeStore((s) => s.selectAgent);
 
   const subAgents = Array.from(agents.values()).filter((a) => a.isSubAgent);
 
   if (subAgents.length === 0) {
-    return <div className="py-2 text-center text-xs text-gray-400 dark:text-gray-500">无 Sub-Agent</div>;
+    return <div className="py-2 text-center text-xs text-gray-400 dark:text-gray-500">{t("empty.noSubAgents")}</div>;
   }
 
   return (
     <div>
       {subAgents.map((sub) => {
         const parent = sub.parentAgentId ? agents.get(sub.parentAgentId) : null;
-        const runtime = formatRuntime(sub.lastActiveAt);
+        const runtime = formatRuntime(sub.lastActiveAt, t);
 
         return (
           <button
@@ -35,7 +37,7 @@ export function SubAgentPanel() {
                     backgroundColor: STATUS_COLORS[sub.status as AgentVisualStatus],
                   }}
                 >
-                  {STATUS_LABELS[sub.status as AgentVisualStatus]}
+                  {t(`agent.statusLabels.${sub.status}`)}
                 </span>
               </div>
               {parent && (
@@ -71,12 +73,15 @@ export function SubAgentPanel() {
   );
 }
 
-function formatRuntime(startTs: number): string {
+function formatRuntime(
+  startTs: number,
+  t: (key: string, opts?: Record<string, number>) => string,
+): string {
   const elapsed = Math.max(0, Math.floor((Date.now() - startTs) / 1000));
   if (elapsed < 60) {
-    return `运行 ${elapsed}s`;
+    return t("time.running", { seconds: elapsed });
   }
   const minutes = Math.floor(elapsed / 60);
   const seconds = elapsed % 60;
-  return `运行 ${minutes}m ${seconds}s`;
+  return t("time.runningMinutes", { minutes, seconds });
 }

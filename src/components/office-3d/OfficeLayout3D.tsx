@@ -1,4 +1,5 @@
 import { Html } from "@react-three/drei";
+import { useTranslation } from "react-i18next";
 import * as THREE from "three";
 
 const DESK_HEIGHT = 0.42;
@@ -302,6 +303,7 @@ function ZoneFloor({
 }
 
 export function OfficeLayout3D() {
+  const { t } = useTranslation("office");
   return (
     <group>
       {/* === Zone Floor Colors === */}
@@ -311,10 +313,10 @@ export function OfficeLayout3D() {
       <ZoneFloor position={[12, 0.015, 9]} size={[6.5, 5]} color="#40a060" />
 
       {/* === Zone Labels === */}
-      <ZoneLabel position={[1.5, 0.05, 0.8]} label="固定工位区" color="#2563eb" />
-      <ZoneLabel position={[9.5, 0.05, 0.8]} label="会议区" color="#7c3aed" />
-      <ZoneLabel position={[1.5, 0.05, 6.8]} label="热工位区" color="#c2410c" />
-      <ZoneLabel position={[9.5, 0.05, 6.8]} label="休息区" color="#15803d" />
+      <ZoneLabel position={[1.5, 0.05, 0.8]} label={t("zones.desk")} color="#2563eb" />
+      <ZoneLabel position={[9.5, 0.05, 0.8]} label={t("zones.meeting")} color="#7c3aed" />
+      <ZoneLabel position={[1.5, 0.05, 6.8]} label={t("zones.hotDesk")} color="#c2410c" />
+      <ZoneLabel position={[9.5, 0.05, 6.8]} label={t("zones.lounge")} color="#15803d" />
 
       {/* === Desk Zone — 2 rows × 3 columns === */}
       {[

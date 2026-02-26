@@ -1,9 +1,11 @@
 import { useState, useRef, useEffect } from "react";
+import { useTranslation } from "react-i18next";
 import { ChevronDown } from "lucide-react";
 import { useOfficeStore } from "@/store/office-store";
 import { useChatDockStore } from "@/store/console-stores/chat-dock-store";
 
 export function AgentSelector() {
+  const { t } = useTranslation("chat");
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
 
@@ -39,7 +41,7 @@ export function AgentSelector() {
           className="inline-block h-2.5 w-2.5 rounded-full"
           style={{ backgroundColor: getAgentColor(currentAgent?.id ?? "") }}
         />
-        <span className="max-w-[100px] truncate">{currentAgent?.name ?? "Agent"}</span>
+        <span className="max-w-[100px] truncate">{currentAgent?.name ?? t("agentSelector.defaultLabel")}</span>
         <ChevronDown className="h-3 w-3" />
       </button>
 

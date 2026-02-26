@@ -1,0 +1,55 @@
+{
+  "dashboard": {
+    "title": "Dashboard",
+    "description": "System overview: Gateway status, channel connections, skill status",
+    "comingSoon": "Dashboard coming soon",
+    "waitingPhase": "Waiting for Phase C implementation"
+  },
+  "channels": {
+    "title": "Channels",
+    "description": "Manage messaging channels: Telegram, Discord, WhatsApp, etc.",
+    "comingSoon": "Channels management coming soon",
+    "waitingPhase": "Waiting for Phase C implementation"
+  },
+  "skills": {
+    "title": "Skills",
+    "description": "Manage skills and plugins: install, enable/disable, configure",
+    "comingSoon": "Skills management coming soon",
+    "waitingPhase": "Waiting for Phase C implementation"
+  },
+  "cron": {
+    "title": "Cron Tasks",
+    "description": "Manage cron tasks: create, edit, enable/disable, run immediately",
+    "comingSoon": "Cron task management coming soon",
+    "waitingPhase": "Waiting for Phase C implementation"
+  },
+  "settings": {
+    "title": "Settings",
+    "description": "App settings: theme, provider, gateway, updates",
+    "comingSoon": "Settings coming soon",
+    "waitingPhase": "Waiting for Phase D implementation"
+  },
+  "viewModels": {
+    "statusLabels": {
+      "connected": "Connected",
+      "disconnected": "Disconnected",
+      "connecting": "Connecting",
+      "error": "Error"
+    },
+    "taskStatus": {
+      "active": "Active",
+      "paused": "Paused"
+    },
+    "schedule": {
+      "daily": "Daily at {{time}}",
+      "weekly": "Weekly {{day}} at {{time}}",
+      "every": "every {{minutes}}m",
+      "at": "at {{time}}",
+      "unknown": "unknown"
+    },
+    "skillSource": {
+      "builtIn": "built-in",
+      "marketplace": "marketplace"
+    }
+  }
+}

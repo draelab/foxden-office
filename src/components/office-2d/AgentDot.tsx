@@ -1,7 +1,8 @@
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { Bot, User } from "lucide-react";
 import type { VisualAgent } from "@/gateway/types";
-import { STATUS_COLORS, STATUS_LABELS } from "@/lib/constants";
+import { STATUS_COLORS } from "@/lib/constants";
 import { useOfficeStore } from "@/store/office-store";
 
 interface AgentDotProps {
@@ -9,6 +10,7 @@ interface AgentDotProps {
 }
 
 export function AgentDot({ agent }: AgentDotProps) {
+  const { t } = useTranslation("common");
   const selectedAgentId = useOfficeStore((s) => s.selectedAgentId);
   const selectAgent = useOfficeStore((s) => s.selectAgent);
   const theme = useOfficeStore((s) => s.theme);
@@ -81,7 +83,7 @@ export function AgentDot({ agent }: AgentDotProps) {
               border: `1px solid ${isDark ? "rgba(255,255,255,0.1)" : "rgba(0,0,0,0.05)"}`,
             }}
           >
-            {agent.name} · {STATUS_LABELS[agent.status]}
+            {agent.name} · {t(`agent.statusLabels.${agent.status}`)}
           </div>
         </foreignObject>
       )}

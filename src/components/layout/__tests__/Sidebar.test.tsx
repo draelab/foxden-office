@@ -1,7 +1,10 @@
 import { render, screen, fireEvent, within } from "@testing-library/react";
 import { describe, it, expect, beforeEach } from "vitest";
+import i18n from "@/i18n/test-setup";
 import { Sidebar } from "@/components/layout/Sidebar";
 import { useOfficeStore } from "@/store/office-store";
+
+const t = (key: string) => i18n.t(key);
 
 function setupAgents() {
   useOfficeStore.getState().initAgents([
@@ -44,14 +47,13 @@ describe("Sidebar", () => {
 
   it("search filters agents by name", () => {
     render(<Sidebar />);
-    const searchInput = screen.getByPlaceholderText("搜索 Agent...");
+    const searchInput = screen.getByPlaceholderText(t("layout:sidebar.searchPlaceholder"));
     fireEvent.change(searchInput, { target: { value: "cod" } });
     expect(screen.getByText("Coder")).toBeInTheDocument();
     expect(screen.queryByText("Reviewer")).not.toBeInTheDocument();
   });
 
   it("filter tags work", () => {
-    // Make one agent active
     useOfficeStore.setState({ runIdMap: new Map([["r1", "a1"]]) });
     useOfficeStore.getState().processAgentEvent({
       runId: "r1",
@@ -62,8 +64,8 @@ describe("Sidebar", () => {
     });
 
     render(<Sidebar />);
-    const searchSection = screen.getByPlaceholderText("搜索 Agent...").parentElement;
-    const activeFilter = within(searchSection!).getByText("活跃");
+    const searchSection = screen.getByPlaceholderText(t("layout:sidebar.searchPlaceholder")).parentElement;
+    const activeFilter = within(searchSection!).getByText(t("layout:sidebar.filters.active"));
     fireEvent.click(activeFilter);
 
     expect(screen.getAllByText("Coder").length).toBeGreaterThan(0);

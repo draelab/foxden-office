@@ -2,6 +2,7 @@ import { render, fireEvent } from "@testing-library/react";
 import { describe, it, expect, beforeEach } from "vitest";
 import { AgentDot } from "@/components/office-2d/AgentDot";
 import type { VisualAgent } from "@/gateway/types";
+import { STATUS_COLORS } from "@/lib/constants";
 import { useOfficeStore } from "@/store/office-store";
 
 const mockAgent: VisualAgent = {
@@ -35,23 +36,23 @@ describe("AgentDot", () => {
     useOfficeStore.setState({ selectedAgentId: null });
   });
 
-  it("renders circle with correct fill color for idle", () => {
+  it("renders circle with status color as stroke", () => {
     const { container } = renderDot();
+    const circle = container.querySelector("circle");
+    expect(circle?.getAttribute("stroke")).toBe(STATUS_COLORS.idle);
+  });
+
+  it("renders circle with error color stroke", () => {
+    const { container } = renderDot({ ...mockAgent, status: "error" });
     const circles = container.querySelectorAll("circle");
     const mainCircle = circles[0];
-    expect(mainCircle.getAttribute("fill")).toBe("#22c55e");
+    expect(mainCircle.getAttribute("stroke")).toBe(STATUS_COLORS.error);
   });
 
-  it("renders circle with error color", () => {
-    const { container } = renderDot({ ...mockAgent, status: "error" });
-    const circle = container.querySelector("circle");
-    expect(circle?.getAttribute("fill")).toBe("#ef4444");
-  });
-
-  it("shows initial letter", () => {
+  it("renders a foreignObject for the icon", () => {
     const { container } = renderDot();
-    const text = container.querySelector("text");
-    expect(text?.textContent).toBe("T");
+    const fo = container.querySelector("foreignObject");
+    expect(fo).toBeTruthy();
   });
 
   it("clicking triggers selectAgent", () => {

@@ -52,7 +52,7 @@ export function FloorPlan() {
 
         {/* Zone labels */}
         {Object.entries(ZONES).map(([key, zone]) => (
-          <ZoneLabel key={`label-${key}`} zone={zone} />
+          <ZoneLabel key={`label-${key}`} zone={zone} zoneKey={key as keyof typeof ZONES} />
         ))}
 
         {/* Collaboration lines */}

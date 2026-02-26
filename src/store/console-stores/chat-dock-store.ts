@@ -1,5 +1,6 @@
 import { create } from "zustand";
 import { getAdapter } from "@/gateway/adapter-provider";
+import i18n from "@/i18n";
 import type { GatewayAdapter } from "@/gateway/adapter";
 import type { SessionInfo } from "@/gateway/adapter-types";
 import type { GatewayEventFrame } from "@/gateway/types";
@@ -92,7 +93,7 @@ export const useChatDockStore = create<ChatDockState>((set, get) => ({
         adapter = getAdapter();
       } catch (initErr) {
         console.error("[ChatDock] Adapter not initialized:", initErr);
-        set({ error: "Gateway Adapter 未初始化", isStreaming: false });
+        set({ error: i18n.t("common:errors.adapterNotInitialized"), isStreaming: false });
         return;
       }
       console.log("[ChatDock] Sending chat.send:", { text: trimmed, sessionKey: currentSessionKey });
@@ -259,7 +260,7 @@ export const useChatDockStore = create<ChatDockState>((set, get) => ({
         break;
       }
       case "error": {
-        const errorMsg = String(event.errorMessage || "发生错误");
+        const errorMsg = String(event.errorMessage || i18n.t("common:errors.errorOccurred"));
         set({
           error: errorMsg,
           isStreaming: false,

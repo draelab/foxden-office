@@ -1,4 +1,5 @@
 import { useMemo, useState } from "react";
+import { useTranslation } from "react-i18next";
 import type { VisualAgent } from "@/gateway/types";
 import { STATUS_COLORS } from "@/lib/constants";
 import { useOfficeStore } from "@/store/office-store";
@@ -38,6 +39,7 @@ function mapToolCountToRadius(count: number, maxCount: number): number {
 }
 
 export function NetworkGraph() {
+  const { t } = useTranslation();
   const agents = useOfficeStore((s) => s.agents);
   const links = useOfficeStore((s) => s.links);
   const theme = useOfficeStore((s) => s.theme);
@@ -70,7 +72,7 @@ export function NetworkGraph() {
   if (topAgents.length === 0 && links.length === 0) {
     return (
       <div className="flex h-48 items-center justify-center text-sm text-gray-500 dark:text-gray-400">
-        暂无 Agent 关系数据
+        {t("empty.noRelationData")}
       </div>
     );
   }

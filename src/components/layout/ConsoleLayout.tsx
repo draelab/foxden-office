@@ -1,25 +1,27 @@
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { Home, Radio, Puzzle, Clock, Settings } from "lucide-react";
 import { TopBar } from "./TopBar";
 
-const SIDEBAR_NAV_ITEMS = [
-  { path: "/dashboard", label: "Dashboard", icon: Home },
-  { path: "/channels", label: "Channels", icon: Radio },
-  { path: "/skills", label: "Skills", icon: Puzzle },
-  { path: "/cron", label: "Cron Tasks", icon: Clock },
-  { path: "/settings", label: "Settings", icon: Settings },
-] as const;
-
 export function ConsoleLayout() {
+  const { t } = useTranslation("layout");
   const location = useLocation();
   const navigate = useNavigate();
+
+  const sidebarNavItems = [
+    { path: "/dashboard", labelKey: "consoleNav.dashboard", icon: Home },
+    { path: "/channels", labelKey: "consoleNav.channels", icon: Radio },
+    { path: "/skills", labelKey: "consoleNav.skills", icon: Puzzle },
+    { path: "/cron", labelKey: "consoleNav.cron", icon: Clock },
+    { path: "/settings", labelKey: "consoleNav.settings", icon: Settings },
+  ] as const;
 
   return (
     <div className="flex h-screen w-screen flex-col bg-gray-50 text-gray-900 dark:bg-gray-950 dark:text-gray-100">
       <TopBar />
       <div className="flex flex-1 overflow-hidden">
         <nav className="flex w-52 shrink-0 flex-col border-r border-gray-200 bg-white py-3 dark:border-gray-700 dark:bg-gray-900">
-          {SIDEBAR_NAV_ITEMS.map((item) => {
+          {sidebarNavItems.map((item) => {
             const isActive = location.pathname === item.path;
             const Icon = item.icon;
             return (
@@ -33,7 +35,7 @@ export function ConsoleLayout() {
                 }`}
               >
                 <Icon className="h-4 w-4" />
-                <span>{item.label}</span>
+                <span>{t(item.labelKey)}</span>
               </button>
             );
           })}

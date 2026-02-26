@@ -206,19 +206,19 @@ OpenClaw Office 的主价值是“实时可视化 + 可操作的 Agent 协作监
 3. 建立新增 stores 骨架
 
 完成度检查：
-- [ ] 所有页面可访问
-- [ ] 不依赖 Electron 即可跑通页面
-- [ ] Adapter 替换点完整
+- [x] 所有页面可访问
+- [x] 不依赖 Electron 即可跑通页面
+- [x] Adapter 替换点完整
 
-### Phase B：Office + Chat Dock（优先）
+### Phase B：Office + Chat（优先）
 1. 完成 ChatDockBar + ChatTimelineDrawer
 2. 完成 message-utils 与 chat store 流程
 3. 解决 2D/3D 同屏性能问题
 
 完成度检查：
-- [ ] 输入/发送/停止/附件流程可用
-- [ ] streaming/tool/thinking 正常显示
-- [ ] 2D/3D 场景帧率无明显下降
+- [x] 输入/发送/停止/附件流程可用
+- [x] streaming/tool/thinking 正常显示
+- [x] 2D/3D 场景帧率无明显下降
 
 ### Phase C：Dashboard + Channels + Skills + Cron
 1. 逐页复刻功能
@@ -227,7 +227,7 @@ OpenClaw Office 的主价值是“实时可视化 + 可操作的 Agent 协作监
 完成度检查：
 - [ ] 每页主流程可走通
 - [ ] 所有关键按钮有状态反馈
-- [ ] mock 数据下可稳定演示
+- [ ] 本地真实openclaw gateway 数据下可稳定演示
 
 ### Phase D：Settings 与全局一致性
 1. Providers/Updates/Developer 等模块

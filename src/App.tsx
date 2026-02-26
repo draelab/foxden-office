@@ -1,5 +1,6 @@
 import { lazy, Suspense, useState, useEffect } from "react";
 import { Routes, Route, Navigate, useLocation } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { AppShell } from "@/components/layout/AppShell";
 import { ConsoleLayout } from "@/components/layout/ConsoleLayout";
 import { FloorPlan } from "@/components/office-2d/FloorPlan";
@@ -16,11 +17,12 @@ import type { PageId } from "@/gateway/types";
 const Scene3D = lazy(() => import("@/components/office-3d/Scene3D"));
 
 function Scene3DFallback() {
+  const { t } = useTranslation("office");
   return (
     <div className="flex h-full w-full items-center justify-center bg-gray-50 dark:bg-gray-950">
       <div className="flex flex-col items-center gap-3">
         <div className="h-8 w-8 animate-spin rounded-full border-2 border-blue-500 border-t-transparent" />
-        <span className="text-sm text-gray-500 dark:text-gray-400">加载 3D 场景...</span>
+        <span className="text-sm text-gray-500 dark:text-gray-400">{t("loading3D")}</span>
       </div>
     </div>
   );

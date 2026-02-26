@@ -16,6 +16,7 @@ OpenClaw Office 是一个可视化监控前端，将 OpenClaw Multi-Agent 系统
 - **2D 渲染：** SVG + CSS Animations
 - **3D 渲染：** React Three Fiber (R3F) + @react-three/drei（Phase 2+）
 - **图表：** Recharts
+- **国际化：** i18next + react-i18next + i18next-browser-languagedetector
 - **测试：** Vitest + @testing-library/react
 - **实时通信：** 原生 WebSocket API
 
@@ -25,6 +26,10 @@ OpenClaw Office 是一个可视化监控前端，将 OpenClaw Multi-Agent 系统
 src/
 ├── main.tsx              # 入口
 ├── App.tsx               # 根组件
+├── i18n/                 # 国际化配置与翻译文件
+│   ├── index.ts          # i18next 初始化
+│   ├── test-setup.ts     # 测试环境 i18n 初始化
+│   └── locales/{zh,en}/  # 中英文翻译 JSON（按命名空间拆分）
 ├── gateway/              # Gateway 通信层（WS 客户端、RPC、事件解析）
 ├── store/                # Zustand 状态管理（Agent 状态、指标聚合）
 ├── components/
@@ -33,7 +38,7 @@ src/
 │   ├── office-3d/        # 3D R3F 场景组件
 │   ├── overlays/         # HTML Overlay（气泡、面板）
 │   ├── panels/           # 侧边/弹窗面板
-│   └── shared/           # 公共组件
+│   └── shared/           # 公共组件（含 LanguageSwitcher）
 ├── hooks/                # 自定义 React Hooks
 ├── lib/                  # 工具函数库
 └── styles/               # 全局样式
@@ -208,6 +213,56 @@ Chat 事件的 `state` 取值：
 | `tool` | `name: "xxx"` | `tool_calling` | 工具面板弹出 |
 | `assistant` | `text: "..."` | `speaking` | Markdown 气泡 |
 | `error` | `message: "..."` | `error` | 红色叹号标识 |
+
+## 国际化（i18n）
+
+项目使用 `react-i18next` + `i18next` 实现中英文双语支持。**所有用户可见的文本必须通过 i18n 翻译，禁止硬编码中文或英文字符串。**
+
+### 目录结构
+
+```
+src/i18n/
+├── index.ts                # i18next 初始化配置
+├── test-setup.ts           # 测试环境专用初始化（强制 lng: 'zh'）
+└── locales/
+    ├── zh/                 # 中文翻译
+    │   ├── common.json     # 通用：状态、错误、时间、zones
+    │   ├── layout.json     # 布局：TopBar、Sidebar、ConsoleNav
+    │   ├── office.json     # Office 场景：加载文案、场景标签
+    │   ├── panels.json     # 面板：指标、Agent 详情、图表
+    │   ├── chat.json       # Chat：对话栏、消息
+    │   └── console.json    # 控制台：Dashboard/Channels/Skills/Cron/Settings
+    └── en/                 # 英文翻译（结构与 zh/ 镜像）
+```
+
+### 关键规则
+
+1. **React 组件中**：使用 `useTranslation(namespace)` hook + `t("key")` 访问翻译
+2. **非 React 文件中**（store、gateway、lib）：使用 `import i18n from "@/i18n"; i18n.t("namespace:key")`
+3. **命名空间选择**：根据功能域选择 `common`、`layout`、`office`、`panels`、`chat`、`console`
+4. **翻译文件格式**：中英文 JSON 文件必须保持 key 结构完全一致
+5. **新增文本时**：同时在 `zh/` 和 `en/` 对应的 JSON 文件中添加翻译
+6. **测试环境**：`src/i18n/test-setup.ts` 已在 `tests/setup.ts` 中全局引入，测试默认使用中文
+7. **语言切换**：通过 `LanguageSwitcher` 组件实现，语言偏好存储在 `localStorage`（key: `i18nextLng`）
+8. **不由 i18n 管理**：技术标识符（Agent ID、事件名）、CSS 类名、import 路径、`console.log` 等
+
+### 示例
+
+```tsx
+// React 组件
+import { useTranslation } from "react-i18next";
+
+function MyComponent() {
+  const { t } = useTranslation("panels");
+  return <h1>{t("metrics.activeAgents")}</h1>;
+}
+```
+
+```ts
+// 非 React 文件（store / lib / gateway）
+import i18n from "@/i18n";
+const label = i18n.t("common:errors.notConnected");
+```
 
 ## Mock 模式
 

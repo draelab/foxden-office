@@ -1,6 +1,7 @@
 // Domain Mapping: Gateway payload → UI ViewModel 转换
 
 import type { ChannelInfo, CronTask, SkillInfo } from "@/gateway/adapter-types";
+import i18n from "@/i18n";
 
 // --- ViewModel Types ---
 
@@ -49,12 +50,9 @@ const CHANNEL_ICONS: Record<string, string> = {
   mattermost: "💠",
 };
 
-const STATUS_LABELS: Record<string, string> = {
-  connected: "已连接",
-  disconnected: "未连接",
-  connecting: "连接中",
-  error: "错误",
-};
+function getChannelStatusLabel(status: string): string {
+  return i18n.t(`console:viewModels.statusLabels.${status}`, { defaultValue: status });
+}
 
 const STATUS_COLORS: Record<string, string> = {
   connected: "#22c55e",
@@ -70,7 +68,7 @@ export function toChannelCardVM(channel: ChannelInfo): ChannelCardVM {
     id: channel.id,
     name: channel.name,
     type: channel.type,
-    statusLabel: STATUS_LABELS[channel.status] ?? channel.status,
+    statusLabel: getChannelStatusLabel(channel.status),
     statusColor: STATUS_COLORS[channel.status] ?? "#6b7280",
     icon: CHANNEL_ICONS[channel.type] ?? "📡",
   };
@@ -83,7 +81,7 @@ export function toSkillCardVM(skill: SkillInfo): SkillCardVM {
     description: skill.description,
     enabled: skill.enabled,
     icon: skill.icon || "📦",
-    source: skill.isBundled ? "built-in" : "marketplace",
+    source: skill.isBundled ? i18n.t("console:viewModels.skillSource.builtIn") : i18n.t("console:viewModels.skillSource.marketplace"),
   };
 }
 
@@ -98,31 +96,28 @@ export function toCronTaskCardVM(task: CronTask): CronTaskCardVM {
     enabled: task.enabled,
     lastRunAt: task.lastRun?.time ? new Date(task.lastRun.time).getTime() : null,
     nextRunAt: task.nextRun ? new Date(task.nextRun).getTime() : null,
-    statusLabel: task.enabled ? "活跃" : "已暂停",
+    statusLabel: task.enabled ? i18n.t("console:viewModels.taskStatus.active") : i18n.t("console:viewModels.taskStatus.paused"),
   };
 }
 
 function formatCronSchedule(s: { kind: string; expr?: string; everyMs?: number; at?: string }): string {
   if (s.kind === "cron" && s.expr) return s.expr;
-  if (s.kind === "every" && s.everyMs) return `every ${Math.round(s.everyMs / 60_000)}m`;
-  if (s.kind === "at" && s.at) return `at ${s.at}`;
-  return "unknown";
+  if (s.kind === "every" && s.everyMs) return i18n.t("console:viewModels.schedule.every", { minutes: Math.round(s.everyMs / 60_000) });
+  if (s.kind === "at" && s.at) return i18n.t("console:viewModels.schedule.at", { time: s.at });
+  return i18n.t("console:viewModels.schedule.unknown");
 }
 
 function describeCronSchedule(expr: string): string {
-  if (expr.startsWith("every ")) return expr;
-  if (expr.startsWith("at ")) return expr;
-
   const parts = expr.split(" ");
   if (parts.length !== 5) return expr;
 
   const [min, hour, dom, _mon, dow] = parts;
 
   if (dom === "*" && dow === "*" && hour !== "*" && min !== "*") {
-    return `每天 ${hour}:${min.padStart(2, "0")}`;
+    return i18n.t("console:viewModels.schedule.daily", { time: `${hour}:${min.padStart(2, "0")}` });
   }
   if (dow !== "*" && dom === "*") {
-    return `每周 ${dow} ${hour}:${min.padStart(2, "0")}`;
+    return i18n.t("console:viewModels.schedule.weekly", { day: dow, time: `${hour}:${min.padStart(2, "0")}` });
   }
 
   return expr;

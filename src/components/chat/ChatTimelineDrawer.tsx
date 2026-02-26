@@ -1,4 +1,5 @@
 import { useRef, useEffect, useCallback, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { ArrowDown } from "lucide-react";
 import { useChatDockStore, type ChatDockMessage } from "@/store/console-stores/chat-dock-store";
 import { MessageBubble } from "./MessageBubble";
@@ -24,6 +25,7 @@ function extractStreamingText(streamingMessage: Record<string, unknown> | null):
 }
 
 export function ChatTimelineDrawer({ height, onHeightChange }: ChatTimelineDrawerProps) {
+  const { t } = useTranslation("chat");
   const dockExpanded = useChatDockStore((s) => s.dockExpanded);
   const messages = useChatDockStore((s) => s.messages);
   const isStreaming = useChatDockStore((s) => s.isStreaming);
@@ -118,7 +120,7 @@ export function ChatTimelineDrawer({ height, onHeightChange }: ChatTimelineDrawe
       >
         {allMessages.length === 0 && !isStreaming ? (
           <div className="flex h-full items-center justify-center text-sm text-gray-400">
-            开始一段新的对话
+            {t("dock.startNewChat")}
           </div>
         ) : (
           <>
@@ -137,7 +139,7 @@ export function ChatTimelineDrawer({ height, onHeightChange }: ChatTimelineDrawe
               <div className="mb-3 flex justify-start">
                 <div className="flex items-center gap-2 rounded-lg bg-gray-100 px-3 py-2 text-sm text-gray-400 dark:bg-gray-800">
                   <div className="h-4 w-4 animate-spin rounded-full border-2 border-blue-500 border-t-transparent" />
-                  <span>思考中...</span>
+                  <span>{t("dock.thinkingStatus")}</span>
                 </div>
               </div>
             )}

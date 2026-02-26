@@ -1,4 +1,5 @@
 import { useMemo, useState } from "react";
+import { useTranslation } from "react-i18next";
 import type { EventHistoryItem } from "@/gateway/types";
 import { useOfficeStore } from "@/store/office-store";
 
@@ -66,6 +67,7 @@ function buildHeatmapData(
 }
 
 export function ActivityHeatmap() {
+  const { t } = useTranslation("panels");
   const eventHistory = useOfficeStore((s) => s.eventHistory);
   const theme = useOfficeStore((s) => s.theme);
   const isDark = theme === "dark";
@@ -82,7 +84,7 @@ export function ActivityHeatmap() {
   if (rows.length === 0) {
     return (
       <div className="flex h-48 items-center justify-center text-sm text-gray-500 dark:text-gray-400">
-        暂无活跃数据
+        {t("common:empty.noActivityData")}
       </div>
     );
   }
@@ -134,7 +136,7 @@ export function ActivityHeatmap() {
           className="fixed z-10 rounded border border-gray-200 bg-white px-2 py-1 text-xs shadow dark:border-gray-700 dark:bg-gray-900 dark:text-gray-200"
           style={{ left: tooltip.x, top: tooltip.y - 32 }}
         >
-          {tooltip.agentName} | {tooltip.hour} | {tooltip.count} events
+          {tooltip.agentName} | {tooltip.hour} | {tooltip.count} {t("activityHeatmap.eventsUnit")}
         </div>
       )}
     </div>

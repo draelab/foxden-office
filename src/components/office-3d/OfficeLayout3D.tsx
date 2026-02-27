@@ -302,6 +302,58 @@ function ZoneFloor({
   );
 }
 
+/** Logo backdrop wall in the lounge zone */
+function ReceptionWall3D() {
+  return (
+    <group position={[12, 0, 10]}>
+      {/* Main wall panel */}
+      <mesh position={[0, 1.0, 0]} castShadow>
+        <boxGeometry args={[3, 2, 0.08]} />
+        <meshStandardMaterial color="#3b4f6b" roughness={0.6} metalness={0.1} />
+      </mesh>
+      {/* Top accent strip */}
+      <mesh position={[0, 2.02, 0]}>
+        <boxGeometry args={[3, 0.04, 0.1]} />
+        <meshStandardMaterial color="#7a9bc0" roughness={0.4} metalness={0.2} />
+      </mesh>
+      {/* Logo text placeholder — emissive panel */}
+      <mesh position={[0, 1.2, 0.05]}>
+        <planeGeometry args={[1.8, 0.3]} />
+        <meshStandardMaterial
+          color="#e0e8f0"
+          emissive="#90b0d0"
+          emissiveIntensity={0.4}
+          transparent
+          opacity={0.85}
+        />
+      </mesh>
+    </group>
+  );
+}
+
+/** Curved reception desk in front of the logo wall */
+function ReceptionDesk3D() {
+  return (
+    <group position={[12, 0, 10.8]}>
+      {/* Desk body */}
+      <mesh position={[0, 0.4, 0]} castShadow receiveShadow>
+        <boxGeometry args={[2.4, 0.8, 0.5]} />
+        <meshStandardMaterial color="#8494a7" roughness={0.7} metalness={0.05} />
+      </mesh>
+      {/* Desk top surface */}
+      <mesh position={[0, 0.82, 0]}>
+        <boxGeometry args={[2.5, 0.04, 0.55]} />
+        <meshStandardMaterial color="#a5b4c8" roughness={0.5} metalness={0.08} />
+      </mesh>
+      {/* Front decorative panel */}
+      <mesh position={[0, 0.4, 0.26]}>
+        <boxGeometry args={[2.3, 0.7, 0.02]} />
+        <meshStandardMaterial color="#6a7a8a" roughness={0.6} />
+      </mesh>
+    </group>
+  );
+}
+
 export function OfficeLayout3D() {
   const { t } = useTranslation("office");
   return (
@@ -371,13 +423,20 @@ export function OfficeLayout3D() {
         </group>
       ))}
 
-      {/* === Lounge Zone === */}
-      <Sofa position={[10.5, 0, 8.5]} rotation={0} />
-      <Sofa position={[13.5, 0, 8.5]} rotation={Math.PI} />
-      <CoffeeTable position={[12, 0, 8.5]} />
-      <Sofa position={[12, 0, 10.5]} rotation={Math.PI / 2} />
-      <Bookshelf position={[14.8, 0, 10.5]} />
-      <Bookshelf position={[9.2, 0, 10.5]} />
+      {/* === Lounge Zone — upper half: sofas === */}
+      <Sofa position={[10.5, 0, 7.8]} rotation={0} />
+      <Sofa position={[13, 0, 7.8]} rotation={0} />
+      <Sofa position={[10.5, 0, 8.8]} rotation={Math.PI} />
+      <CoffeeTable position={[11.8, 0, 8.3]} />
+      <Sofa position={[14.5, 0, 8.5]} rotation={Math.PI / 2} />
+
+      {/* === Logo backdrop wall === */}
+      <ReceptionWall3D />
+      <Bookshelf position={[10, 0, 10]} />
+      <Bookshelf position={[14, 0, 10]} />
+
+      {/* === Reception desk (curved) === */}
+      <ReceptionDesk3D />
 
       {/* === Plants === */}
       {[
@@ -385,6 +444,10 @@ export function OfficeLayout3D() {
         [0.5, 0, 11.5],
         [7.5, 0, 0.5],
         [7.5, 0, 11.5],
+        [10, 0, 10],
+        [14, 0, 10],
+        [10, 0, 11.5],
+        [14, 0, 11.5],
       ].map((pos, i) => (
         <group key={`plant-${i}`} position={pos as [number, number, number]}>
           <mesh position={[0, 0.25, 0]}>

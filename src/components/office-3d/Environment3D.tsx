@@ -301,23 +301,33 @@ export function Environment3D({ theme = "dark" as ThemeMode }: { theme?: ThemeMo
       <WallWithWindows start={[0, 0, 0]} end={[16, 0, 0]} windowCount={4} side="back" />
       {/* Left wall (west) */}
       <WallWithWindows start={[0, 0, 0]} end={[0, 0, 12]} windowCount={3} side="left" />
-      {/* Right wall (east) — partial, open section in middle */}
+      {/* Right wall (east) — with entrance opening in lounge zone */}
       <Wall position={[16, WALL_HEIGHT / 2, 2]} size={[WALL_THICKNESS, WALL_HEIGHT, 4]} />
-      <Wall position={[16, WALL_HEIGHT / 2, 10]} size={[WALL_THICKNESS, WALL_HEIGHT, 4]} />
+      {/* Right wall lower section, split for entrance door at z≈11 */}
+      <Wall position={[16, WALL_HEIGHT / 2, 8.2]} size={[WALL_THICKNESS, WALL_HEIGHT, 2.4]} />
+      <Wall position={[16, WALL_HEIGHT / 2, 11.7]} size={[WALL_THICKNESS, WALL_HEIGHT, 0.6]} />
+      {/* Door frame — entrance opening z=9.4 to z=11.4 */}
+      <mesh position={[16, WALL_HEIGHT - 0.05, 10.4]}>
+        <boxGeometry args={[WALL_THICKNESS + 0.04, 0.1, 2.1]} />
+        <meshStandardMaterial color={WALL_EDGE_COLOR} roughness={0.4} metalness={0.3} />
+      </mesh>
       {/* Right wall windows */}
-      {[2, 10].map((z) => (
-        <mesh key={`rwin-${z}`} position={[16.07, 1.3, z]} rotation={[0, Math.PI / 2, 0]}>
-          <planeGeometry args={[1.2, 1.3]} />
-          <meshStandardMaterial
-            color={WINDOW_COLOR}
-            emissive={WINDOW_EMISSIVE}
-            emissiveIntensity={0.15}
-            transparent
-            opacity={0.5}
-            side={THREE.DoubleSide}
-          />
-        </mesh>
-      ))}
+      <mesh position={[16.07, 1.3, 2]} rotation={[0, Math.PI / 2, 0]}>
+        <planeGeometry args={[1.2, 1.3]} />
+        <meshStandardMaterial
+          color={WINDOW_COLOR}
+          emissive={WINDOW_EMISSIVE}
+          emissiveIntensity={0.15}
+          transparent
+          opacity={0.5}
+          side={THREE.DoubleSide}
+        />
+      </mesh>
+      {/* Welcome mat at entrance */}
+      <mesh position={[16, 0.02, 10.4]} rotation={[-Math.PI / 2, 0, 0]}>
+        <planeGeometry args={[0.6, 1.5]} />
+        <meshStandardMaterial color="#b0a090" roughness={0.95} />
+      </mesh>
 
       {/* === Interior Dividers (glass-like, lower) === */}
       {/* Divider between desk zone and meeting zone */}

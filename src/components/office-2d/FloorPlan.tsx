@@ -150,8 +150,11 @@ export function FloorPlan() {
         {/* ── Layer 5: Furniture – Hot desk zone ── */}
         <HotDeskZoneFurniture slots={hotDeskSlots} agents={hotDeskAgents} />
 
-        {/* ── Layer 5: Furniture – Lounge zone ── */}
+        {/* ── Layer 5: Furniture – Lounge zone (incl. reception + entrance) ── */}
         <LoungeDecor isDark={isDark} />
+
+        {/* ── Layer 5b: Main entrance door on outer wall ── */}
+        <EntranceDoor isDark={isDark} />
 
         {/* ── Layer 6: Collaboration lines ── */}
         {links.map((link) => {
@@ -430,16 +433,165 @@ function MeetingChairs({
 
 function LoungeDecor({ isDark }: { isDark: boolean }) {
   const lz = ZONES.lounge;
+  const cx = lz.x + lz.width / 2;
+
+  const wallColor = isDark ? "#334155" : "#5a6878";
+  const deskColor = isDark ? "#475569" : "#8494a7";
+  const deskTop = isDark ? "#64748b" : "#a5b4c8";
+  const logoTextColor = isDark ? "#94a3b8" : "#ffffff";
+  const logoBg = isDark ? "#1e293b" : "#3b4f6b";
+
+  // Logo backdrop wall — centered horizontally, at ~55% from top
+  const bgWallW = 200;
+  const bgWallH = 36;
+  const bgWallY = lz.y + lz.height * 0.52;
+
+  // Reception desk — arc in front of logo wall
+  const deskW = 160;
+  const deskH = 24;
+  const deskY = bgWallY + bgWallH + 14;
+
   return (
     <g>
-      <Sofa x={lz.x + 120} y={lz.y + 80} rotation={0} isDark={isDark} />
-      <Sofa x={lz.x + 120} y={lz.y + 200} rotation={180} isDark={isDark} />
-      <Sofa x={lz.x + 380} y={lz.y + 140} rotation={90} isDark={isDark} />
-      <Plant x={lz.x + 50} y={lz.y + 60} />
-      <Plant x={lz.x + 260} y={lz.y + 50} />
-      <Plant x={lz.x + 480} y={lz.y + 240} />
-      <CoffeeCup x={lz.x + 200} y={lz.y + 130} />
-      <CoffeeCup x={lz.x + 320} y={lz.y + 90} />
+      {/* ── Upper lounge area: sofas & coffee ── */}
+      <Sofa x={lz.x + 100} y={lz.y + 60} rotation={0} isDark={isDark} />
+      <Sofa x={lz.x + 280} y={lz.y + 60} rotation={0} isDark={isDark} />
+      <Sofa x={lz.x + 100} y={lz.y + 140} rotation={180} isDark={isDark} />
+      <CoffeeCup x={lz.x + 190} y={lz.y + 100} />
+      <CoffeeCup x={lz.x + 100} y={lz.y + 100} />
+      <Sofa x={lz.x + 440} y={lz.y + 100} rotation={90} isDark={isDark} />
+
+      {/* ── Logo backdrop wall ── */}
+      <rect
+        x={cx - bgWallW / 2}
+        y={bgWallY}
+        width={bgWallW}
+        height={bgWallH}
+        rx={4}
+        fill={logoBg}
+      />
+      {/* Wall top accent strip */}
+      <rect
+        x={cx - bgWallW / 2}
+        y={bgWallY}
+        width={bgWallW}
+        height={3}
+        rx={1.5}
+        fill={isDark ? "#64748b" : "#7a9bc0"}
+      />
+      {/* "OpenClaw" logo text */}
+      <text
+        x={cx}
+        y={bgWallY + bgWallH / 2 + 5}
+        textAnchor="middle"
+        fill={logoTextColor}
+        fontSize={14}
+        fontWeight={700}
+        fontFamily="system-ui, sans-serif"
+        letterSpacing="0.12em"
+      >
+        OpenClaw
+      </text>
+
+      {/* ── Reception desk (rounded front) ── */}
+      <rect
+        x={cx - deskW / 2}
+        y={deskY}
+        width={deskW}
+        height={deskH}
+        rx={12}
+        fill={deskColor}
+        stroke={wallColor}
+        strokeWidth={1}
+      />
+      {/* Desk surface highlight */}
+      <rect
+        x={cx - deskW / 2 + 4}
+        y={deskY + 3}
+        width={deskW - 8}
+        height={deskH - 6}
+        rx={9}
+        fill={deskTop}
+        opacity={0.5}
+      />
+
+      {/* Decorative plants flanking reception */}
+      <Plant x={cx - bgWallW / 2 - 30} y={bgWallY + bgWallH / 2} />
+      <Plant x={cx + bgWallW / 2 + 30} y={bgWallY + bgWallH / 2} />
+
+      {/* Side plants near entrance */}
+      <Plant x={lz.x + 40} y={lz.y + lz.height - 50} />
+      <Plant x={lz.x + lz.width - 40} y={lz.y + lz.height - 50} />
+    </g>
+  );
+}
+
+/** Main entrance door cut into the bottom outer wall of lounge zone */
+function EntranceDoor({ isDark }: { isDark: boolean }) {
+  const lz = ZONES.lounge;
+  const doorCX = lz.x + lz.width / 2;
+  const doorY = OFFICE.y + OFFICE.height;
+  const doorW = 70;
+  const half = doorW / 2;
+
+  const bgColor = isDark ? ZONE_COLORS_DARK.lounge : ZONE_COLORS.lounge;
+  const arcColor = isDark ? "#64748b" : "#8b9bb0";
+  const matColor = isDark ? "#374151" : "#b0a090";
+  const textColor = isDark ? "#64748b" : "#94a3b8";
+
+  return (
+    <g>
+      {/* Erase outer wall segment to create door opening */}
+      <rect
+        x={doorCX - half - 2}
+        y={doorY - OFFICE.wallThickness - 1}
+        width={doorW + 4}
+        height={OFFICE.wallThickness + 4}
+        fill={bgColor}
+      />
+      {/* Door frame posts */}
+      <rect x={doorCX - half - 3} y={doorY - 10} width={3} height={12} rx={1} fill={arcColor} />
+      <rect x={doorCX + half} y={doorY - 10} width={3} height={12} rx={1} fill={arcColor} />
+      {/* Double-door swing arcs */}
+      <path
+        d={`M ${doorCX - half} ${doorY} A ${half} ${half} 0 0 0 ${doorCX} ${doorY - half}`}
+        fill="none"
+        stroke={arcColor}
+        strokeWidth={0.8}
+        strokeDasharray="4 3"
+        opacity={0.5}
+      />
+      <path
+        d={`M ${doorCX + half} ${doorY} A ${half} ${half} 0 0 1 ${doorCX} ${doorY - half}`}
+        fill="none"
+        stroke={arcColor}
+        strokeWidth={0.8}
+        strokeDasharray="4 3"
+        opacity={0.5}
+      />
+      {/* Welcome mat */}
+      <rect
+        x={doorCX - 30}
+        y={doorY - 18}
+        width={60}
+        height={12}
+        rx={3}
+        fill={matColor}
+        opacity={0.5}
+      />
+      {/* "ENTRANCE" label outside */}
+      <text
+        x={doorCX}
+        y={doorY + 14}
+        textAnchor="middle"
+        fill={textColor}
+        fontSize={9}
+        fontWeight={600}
+        fontFamily="system-ui, sans-serif"
+        letterSpacing="0.15em"
+      >
+        ENTRANCE
+      </text>
     </g>
   );
 }

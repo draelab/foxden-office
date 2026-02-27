@@ -51,7 +51,8 @@ export function EditProviderDialog({ open, providerId, config, onSave, onCancel 
     onSave(patch);
   };
 
-  const hasExistingKey = config.apiKey === REDACTED_SENTINEL || (typeof config.apiKey === "string" && config.apiKey.length > 0);
+  const hasExistingAuth = typeof config.auth === "string" && config.auth.length > 0;
+  const hasExistingKey = hasExistingAuth || config.apiKey === REDACTED_SENTINEL || (typeof config.apiKey === "string" && config.apiKey.length > 0);
 
   return (
     <dialog

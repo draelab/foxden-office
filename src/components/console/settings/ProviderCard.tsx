@@ -16,7 +16,8 @@ export function ProviderCard({ providerId, config, onEdit, onDelete }: ProviderC
     config.api as string | undefined,
     config.baseUrl as string | undefined,
   );
-  const hasApiKey = config.apiKey === REDACTED_SENTINEL || (typeof config.apiKey === "string" && config.apiKey.length > 0);
+  const hasAuth = typeof config.auth === "string" && config.auth.length > 0;
+  const hasApiKey = hasAuth || config.apiKey === REDACTED_SENTINEL || (typeof config.apiKey === "string" && config.apiKey.length > 0);
   const models = Array.isArray(config.models) ? config.models : [];
   const reasoningCount = models.filter((m: Record<string, unknown>) => m.reasoning === true).length;
   const imageCount = models.filter((m: Record<string, unknown>) =>

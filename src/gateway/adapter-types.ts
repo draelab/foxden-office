@@ -70,7 +70,13 @@ export type CronSchedule =
 export type CronPayload =
   | { kind: "systemEvent"; text: string }
   | { kind: "agentTurn"; message: string }
-  | { kind: "webhook"; url: string; method?: string; headers?: Record<string, string>; body?: string };
+  | {
+      kind: "webhook";
+      url: string;
+      method?: string;
+      headers?: Record<string, string>;
+      body?: string;
+    };
 
 export interface CronDelivery {
   mode: "none" | "notify" | "webhook";
@@ -224,9 +230,7 @@ export interface AgentCreateResult {
   workspace: string;
 }
 
-export type AgentModelConfig =
-  | string
-  | { primary?: string; fallbacks?: string[] };
+export type AgentModelConfig = string | { primary?: string; fallbacks?: string[] };
 
 export interface AgentUpdateParams {
   agentId: string;

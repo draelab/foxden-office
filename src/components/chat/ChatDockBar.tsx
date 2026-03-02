@@ -1,6 +1,6 @@
+import { ChevronUp, ChevronDown, Send, Square, Paperclip } from "lucide-react";
 import { useState, useRef, useCallback } from "react";
 import { useTranslation } from "react-i18next";
-import { ChevronUp, ChevronDown, Send, Square, Paperclip } from "lucide-react";
 import TextareaAutosize from "react-textarea-autosize";
 import { useChatDockStore } from "@/store/console-stores/chat-dock-store";
 import { AgentSelector } from "./AgentSelector";
@@ -16,6 +16,8 @@ export function ChatDockBar() {
   const isStreaming = useChatDockStore((s) => s.isStreaming);
   const dockExpanded = useChatDockStore((s) => s.dockExpanded);
   const toggleDock = useChatDockStore((s) => s.toggleDock);
+  const setDockExpanded = useChatDockStore((s) => s.setDockExpanded);
+  const messages = useChatDockStore((s) => s.messages);
   const error = useChatDockStore((s) => s.error);
   const clearError = useChatDockStore((s) => s.clearError);
 
@@ -35,18 +37,28 @@ export function ChatDockBar() {
         handleSend();
       }
       if (e.key === "Escape" && dockExpanded) {
-        toggleDock();
+        setDockExpanded(false);
       }
     },
-    [handleSend, isComposing, dockExpanded, toggleDock],
+    [handleSend, isComposing, dockExpanded, setDockExpanded],
   );
+
+  const handleFocus = useCallback(() => {
+    if (!dockExpanded && messages.length > 0) {
+      setDockExpanded(true);
+    }
+  }, [dockExpanded, messages.length, setDockExpanded]);
 
   return (
     <div className="border-t border-gray-200 bg-white dark:border-gray-700 dark:bg-gray-900">
       {error && (
         <div className="flex items-center justify-between bg-red-50 px-3 py-1.5 text-xs text-red-600 dark:bg-red-900/20 dark:text-red-400">
           <span className="truncate">{error}</span>
-          <button type="button" onClick={clearError} className="ml-2 text-red-500 hover:text-red-700">
+          <button
+            type="button"
+            onClick={clearError}
+            className="ml-2 text-red-500 hover:text-red-700"
+          >
             ✕
           </button>
         </div>
@@ -84,6 +96,7 @@ export function ChatDockBar() {
           value={input}
           onChange={(e) => setInput(e.target.value)}
           onKeyDown={handleKeyDown}
+          onFocus={handleFocus}
           onCompositionStart={() => setIsComposing(true)}
           onCompositionEnd={() => setIsComposing(false)}
           placeholder={t("dock.placeholder")}

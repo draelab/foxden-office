@@ -33,11 +33,19 @@
 
 #### 演示视频
 
-[![OpenClaw Office 演示视频](https://img.youtube.com/vi/ACXSFTSlVLY/maxresdefault.jpg)](https://youtu.be/ACXSFTSlVLY)
+<p align="center">
+  <a href="https://www.youtube.com/watch?v=ACXSFTSlVLY">
+    <img src="https://img.youtube.com/vi/ACXSFTSlVLY/maxresdefault.jpg" alt="OpenClaw Office 演示视频" width="100%" />
+  </a>
+</p>
 
-> GitHub 会过滤仓库 README 里的内联 `<video>` 标签，所以这里改为最稳定的 YouTube 缩略图跳转方案。
+<p align="center">
+  ▶ 点击上方预览图即可跳转播放
+</p>
 
-[在 YouTube 观看](https://youtu.be/ACXSFTSlVLY)
+> GitHub 会清洗仓库 README 内容，不允许真正内嵌 YouTube / iframe 播放器，所以最稳妥的实现方式就是“预览图 + 点击播放跳转”。
+
+[在 YouTube 观看](https://www.youtube.com/watch?v=ACXSFTSlVLY)
 
 ### 控制台
 

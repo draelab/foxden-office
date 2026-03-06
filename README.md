@@ -33,11 +33,19 @@
 
 #### Demo Video
 
-[![OpenClaw Office Demo Video](https://img.youtube.com/vi/ACXSFTSlVLY/maxresdefault.jpg)](https://youtu.be/ACXSFTSlVLY)
+<p align="center">
+  <a href="https://www.youtube.com/watch?v=ACXSFTSlVLY">
+    <img src="https://img.youtube.com/vi/ACXSFTSlVLY/maxresdefault.jpg" alt="OpenClaw Office Demo Video" width="100%" />
+  </a>
+</p>
 
-> GitHub strips inline `<video>` tags in repository READMEs, so the stable cross-platform fallback is a clickable YouTube thumbnail.
+<p align="center">
+  ▶ Click the preview image above to play on YouTube
+</p>
 
-[Watch on YouTube](https://youtu.be/ACXSFTSlVLY)
+> GitHub sanitizes repository README content and does not allow embedded YouTube/iframe players, so the most reliable “preview + click-to-play” pattern is a linked video thumbnail.
+
+[Watch on YouTube](https://www.youtube.com/watch?v=ACXSFTSlVLY)
 
 ### Console
 

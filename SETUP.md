@@ -10,7 +10,9 @@ A fork of [ww-ai-lab/openclaw-office](https://github.com/ww-ai-lab/openclaw-offi
 
 **Long-term goal:** Embed this as a page in AARIportal (AP), accessible via Tailscale at `https://draemini.taile60b9d.ts.net:3001`.
 
-**Current state (2026-03-10):** Running locally on port 3005, connected to the gateway, agents visible and animating. ✅
+**Current state (2026-03-10):**
+- ✅ Local dev: running on port 3005, connected directly to gateway
+- ✅ Remote (Tailscale): embedded in AARIportal as the DEN tab, accessible at `https://draemini.taile60b9d.ts.net:3001/office`
 
 ---
 
@@ -178,21 +180,96 @@ Browser (localhost:3005)
 
 - [ ] Sub-agent spawning visualization (desk characters appearing for spawned agents)
 - [ ] Tool call overlays on desks
-- [ ] Embedding in AARIportal as an iframe or route
-- [ ] Tailscale access (will need `VITE_GATEWAY_URL=ws://127.0.0.1:18789` or Tailscale WS URL)
-- [ ] Production build (`pnpm build && pnpm preview`) — bypasses Vite dev server entirely, should be more stable
 
 ---
 
-## Next Steps (AP Integration)
+## Remote Setup — AARIportal (Tailscale) ✅ COMPLETE
 
-For embedding in AP:
-1. Build: `pnpm build` → outputs to `dist/`
-2. AP would either serve the `dist/` statically, or iframe `localhost:3005`
-3. For Tailscale access, the WS URL in `.env` needs to point to the gateway. Options:
-   - Keep `ws://127.0.0.1:18789` if AP proxies the WS connection
-   - Use `ws://draemini.taile60b9d.ts.net:18789` if the gateway port is exposed on Tailscale (not currently set up)
-   - AP-side proxy (similar to what Vite does but in the AP server)
+foxden is embedded as the **DEN tab** in AARIportal, accessible at:
+- Local: `http://localhost:3000/office`
+- Tailscale: `https://draemini.taile60b9d.ts.net:3001/office`
+
+### How It Works
+
+```
+Browser (anywhere via Tailscale)
+  → https://draemini.taile60b9d.ts.net:3001/office  (AP serves foxden static files)
+  → foxden JS detects HTTPS, constructs: wss://draemini.taile60b9d.ts.net:3001/gateway-ws
+  → AP server (Nitro/H3) handles WS upgrade at /gateway-ws
+  → AP proxies to: ws://host.docker.internal:18789  (OpenClaw gateway on Mac host)
+  → Gateway auth: id="cli", mode="cli", token=baked-in at build time
+  → hello-ok → agents populated → real-time animations
+```
+
+### Building for AP
+
+```bash
+cd /Users/draemini/Developer/foxden-office
+
+# Build with relative proxy path (protocol auto-detected at runtime)
+VITE_GATEWAY_URL=/gateway-ws \
+VITE_GATEWAY_TOKEN=<gateway admin token> \
+pnpm build --base /office/
+
+# Copy dist to AP's public/office/
+rm -rf "/Users/draemini/Desktop/App Dev/aariportal/crabwalk/public/office"
+cp -r dist "/Users/draemini/Desktop/App Dev/aariportal/crabwalk/public/office"
+
+# Rebuild AP Docker
+cd "/Users/draemini/Desktop/App Dev/aariportal/crabwalk"
+docker compose up -d --build
+```
+
+### Key App.tsx Changes for Remote Mode
+
+**`rawGatewayUrl` → `proxyGatewayUrl` conversion:**
+```ts
+const rawGatewayUrl = injected?.gatewayUrl || import.meta.env.VITE_GATEWAY_URL || "/gateway-ws";
+const proxyGatewayUrl = rawGatewayUrl.startsWith("/")
+  ? `${window.location.protocol === "https:" ? "wss" : "ws"}://${window.location.host}${rawGatewayUrl}`
+  : rawGatewayUrl;
+```
+**Why:** Relative paths like `/gateway-ws` can't be passed to `new WebSocket()` directly. This converts them to `wss://host/gateway-ws` (or `ws://` for HTTP). Solves the Mixed Content block when served over HTTPS.
+
+**`shouldConfigureRuntimeProxy` guard:**
+```ts
+const shouldConfigureRuntimeProxy = import.meta.env.DEV && rawGatewayUrl.startsWith("/");
+```
+**Why:** Without `import.meta.env.DEV`, production builds call Vite's runtime proxy API (a dev-only endpoint), get AP's 404 HTML back, and render it as an error.
+
+### AP Server — WebSocket Proxy Route
+
+File: `/Users/draemini/Desktop/App Dev/aariportal/crabwalk/server/routes/gateway-ws.ts`
+
+```ts
+import { defineWebSocketHandler } from 'h3'
+import WebSocket from 'ws'
+
+const GATEWAY_URL = process.env.CLAWDBOT_URL || 'ws://127.0.0.1:18789'
+
+export default defineWebSocketHandler({
+  open(peer) { /* create upstream WS, forward messages both ways */ },
+  message(peer, message) { /* browser → gateway */ },
+  close(peer) { /* clean up upstream */ },
+})
+```
+
+**Required Nitro config in `vite.config.ts`:**
+```ts
+nitro({
+  experimental: { websocket: true },
+  serverDir: './server',   // ← critical: not scanned by default
+  ...
+})
+```
+`serverDir: false` is Nitro 3's default — without explicitly setting it, `server/routes/` is never compiled into the build.
+
+### What the Gateway Bind Setting Does NOT Matter For
+
+The gateway is bound to loopback (`127.0.0.1`). This is fine because:
+- The browser makes WS connections, not Docker
+- On macOS Docker Desktop, `host.docker.internal` reaches the host's loopback addresses
+- No gateway bind change needed
 
 ---
 

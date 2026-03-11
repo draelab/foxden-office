@@ -298,8 +298,10 @@ export const useOfficeStore = create<OfficeStore>()(
     sessionKeyMap: new Map(),
 
     addAgent: (agent: VisualAgent) => {
+      // Rename gateway default "Standby-N" labels to den-themed names
+      const sanitized = { ...agent, name: agent.name.replace(/^Standby-(\d+)$/, 'Den Fox-$1') };
       set((state) => {
-        state.agents.set(agent.id, agent);
+        state.agents.set(sanitized.id, sanitized);
         state.globalMetrics = computeMetrics(state.agents, state.globalMetrics);
       });
     },

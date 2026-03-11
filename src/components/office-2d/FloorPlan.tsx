@@ -534,7 +534,7 @@ function LoungeDecor({ isDark }: { isDark: boolean }) {
         fontFamily="system-ui, sans-serif"
         letterSpacing="0.12em"
       >
-        OpenClaw
+        Fox Den
       </text>
 
       {/* ── Reception desk (rounded front) ── */}
@@ -634,7 +634,7 @@ function EntranceDoor({ isDark }: { isDark: boolean }) {
         fontFamily="system-ui, sans-serif"
         letterSpacing="0.15em"
       >
-        ENTRANCE
+        The Trail
       </text>
     </g>
   );

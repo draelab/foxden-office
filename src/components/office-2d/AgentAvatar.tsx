@@ -1,7 +1,7 @@
 import { useState, memo, useRef, useEffect, useCallback } from "react";
 import { useTranslation } from "react-i18next";
 import type { VisualAgent, AgentVisualStatus } from "@/gateway/types";
-import { generateSvgAvatar, type SvgAvatarData } from "@/lib/avatar-generator";
+import { FoxAvatarFace, type FoxVariant } from "./FoxAvatarFace";
 import { STATUS_COLORS, AVATAR } from "@/lib/constants";
 import { useOfficeStore } from "@/store/office-store";
 
@@ -30,8 +30,11 @@ export const AgentAvatar = memo(function AgentAvatar({ agent }: AgentAvatarProps
   const isWalking = agent.movement !== null;
   const color = isPlaceholder || isUnconfirmed ? "#6b7280" : STATUS_COLORS[agent.status];
   const isDark = theme === "dark";
-  const avatarData = generateSvgAvatar(agent.id);
   const clipId = `avatar-clip-${agent.id}`;
+  const foxVariant: FoxVariant =
+    agent.id === "agent:main:main"          ? "aari-telegram" :
+    agent.id.startsWith("agent:discord:")   ? "aari-discord"  :
+    "generic";
   const groupOpacity = isPlaceholder ? 0.3 : isUnconfirmed ? 0.5 : 1;
 
   const displayName =
@@ -125,7 +128,7 @@ export const AgentAvatar = memo(function AgentAvatar({ agent }: AgentAvatarProps
       </defs>
       <circle r={r - 2} fill={isDark ? "#1e293b" : "#f8fafc"} />
       <g clipPath={`url(#${clipId})`}>
-        <AvatarFace data={avatarData} size={r * 2 - 4} />
+        <FoxAvatarFace variant={foxVariant} agentId={agent.id} s={r - 2} />
       </g>
 
       {/* Sub-agent badge */}
@@ -347,146 +350,3 @@ function SpeakingIndicator({ r }: { r: number }) {
   );
 }
 
-/* --- Avatar face SVG based on SvgAvatarData --- */
-
-function AvatarFace({ data, size }: { data: SvgAvatarData; size: number }) {
-  const s = size / 2;
-  const faceRx =
-    data.faceShape === "round" ? s * 0.8 : data.faceShape === "oval" ? s * 0.7 : s * 0.75;
-  const faceRy = data.faceShape === "oval" ? s * 0.9 : faceRx;
-
-  return (
-    <g>
-      {/* Shirt/body (lower half) */}
-      <rect x={-s} y={s * 0.4} width={size} height={s * 1.2} fill={data.shirtColor} />
-
-      {/* Face */}
-      <ellipse cx={0} cy={-s * 0.05} rx={faceRx} ry={faceRy} fill={data.skinColor} />
-
-      {/* Hair */}
-      <HairSvg style={data.hairStyle} color={data.hairColor} s={s} faceRx={faceRx} />
-
-      {/* Eyes */}
-      <EyesSvg style={data.eyeStyle} s={s} />
-    </g>
-  );
-}
-
-function HairSvg({
-  style,
-  color,
-  s,
-  faceRx,
-}: {
-  style: SvgAvatarData["hairStyle"];
-  color: string;
-  s: number;
-  faceRx: number;
-}) {
-  switch (style) {
-    case "short":
-      return <ellipse cx={0} cy={-s * 0.55} rx={faceRx * 0.95} ry={s * 0.45} fill={color} />;
-    case "spiky":
-      return (
-        <g>
-          <ellipse cx={0} cy={-s * 0.55} rx={faceRx * 0.9} ry={s * 0.4} fill={color} />
-          {[-0.4, -0.15, 0.1, 0.35].map((off) => (
-            <polygon
-              key={off}
-              points={`${off * s * 2},-${s * 0.85} ${off * s * 2 - 3},-${s * 0.5} ${off * s * 2 + 3},-${s * 0.5}`}
-              fill={color}
-            />
-          ))}
-        </g>
-      );
-    case "side-part":
-      return (
-        <g>
-          <ellipse cx={-s * 0.1} cy={-s * 0.55} rx={faceRx} ry={s * 0.45} fill={color} />
-          <rect
-            x={faceRx * 0.3}
-            y={-s * 0.9}
-            width={faceRx * 0.5}
-            height={s * 0.3}
-            rx={3}
-            fill={color}
-          />
-        </g>
-      );
-    case "curly":
-      return (
-        <g>
-          {[
-            [-0.35, -0.7],
-            [0, -0.78],
-            [0.35, -0.7],
-            [-0.5, -0.45],
-            [0.5, -0.45],
-          ].map(([ox, oy], i) => (
-            <circle key={i} cx={ox * s} cy={oy * s} r={s * 0.22} fill={color} />
-          ))}
-        </g>
-      );
-    case "buzz":
-      return (
-        <ellipse
-          cx={0}
-          cy={-s * 0.45}
-          rx={faceRx * 0.85}
-          ry={s * 0.35}
-          fill={color}
-          opacity={0.7}
-        />
-      );
-    default:
-      return null;
-  }
-}
-
-function EyesSvg({ style, s }: { style: SvgAvatarData["eyeStyle"]; s: number }) {
-  const ey = -s * 0.08;
-  const gap = s * 0.28;
-  switch (style) {
-    case "dot":
-      return (
-        <g>
-          <circle cx={-gap} cy={ey} r={2} fill="#333" />
-          <circle cx={gap} cy={ey} r={2} fill="#333" />
-        </g>
-      );
-    case "line":
-      return (
-        <g>
-          <line
-            x1={-gap - 3}
-            y1={ey}
-            x2={-gap + 3}
-            y2={ey}
-            stroke="#333"
-            strokeWidth={1.5}
-            strokeLinecap="round"
-          />
-          <line
-            x1={gap - 3}
-            y1={ey}
-            x2={gap + 3}
-            y2={ey}
-            stroke="#333"
-            strokeWidth={1.5}
-            strokeLinecap="round"
-          />
-        </g>
-      );
-    case "wide":
-      return (
-        <g>
-          <ellipse cx={-gap} cy={ey} rx={3} ry={2.5} fill="#fff" stroke="#333" strokeWidth={0.8} />
-          <circle cx={-gap} cy={ey} r={1.2} fill="#333" />
-          <ellipse cx={gap} cy={ey} rx={3} ry={2.5} fill="#fff" stroke="#333" strokeWidth={0.8} />
-          <circle cx={gap} cy={ey} r={1.2} fill="#333" />
-        </g>
-      );
-    default:
-      return null;
-  }
-}

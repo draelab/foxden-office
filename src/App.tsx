@@ -119,10 +119,22 @@ export function App() {
   const injected = (window as unknown as Record<string, unknown>).__OPENCLAW_CONFIG__ as
     | { gatewayUrl?: string; gatewayToken?: string }
     | undefined;
-  const proxyGatewayUrl = injected?.gatewayUrl || "/gateway-ws";
+  // If VITE_GATEWAY_URL is explicitly set (local dev), use it directly to bypass the Vite proxy.
+  // The Vite proxy upgrade handler doesn't reliably fire in Vite 6 for browser WS connections.
+  // If the URL is a relative path (e.g. "/gateway-ws"), convert to absolute WS URL using current page
+  // protocol (http→ws, https→wss) so Mixed Content errors don't occur when served over HTTPS.
+  const rawGatewayUrl = injected?.gatewayUrl || import.meta.env.VITE_GATEWAY_URL || "/gateway-ws";
+  const proxyGatewayUrl = rawGatewayUrl.startsWith("/")
+    ? `${window.location.protocol === "https:" ? "wss" : "ws"}://${window.location.host}${rawGatewayUrl}`
+    : rawGatewayUrl;
   const managedGatewayToken = injected?.gatewayToken || import.meta.env.VITE_GATEWAY_TOKEN || "";
   const [connectionPreference, setConnectionPreference] = useState<ConnectionPreference | null>(
-    () => readConnectionPreference(),
+    () =>
+      readConnectionPreference() ??
+      // Auto-connect in local mode when gateway URL is baked in at build time (e.g. embedded in AP)
+      (import.meta.env.VITE_GATEWAY_URL
+        ? { mode: "local" as const, gatewayUrl: "", gatewayToken: "" }
+        : null),
   );
   const [isApplyingConnection, setIsApplyingConnection] = useState(false);
   const [connectionSetupError, setConnectionSetupError] = useState<string | null>(null);
@@ -138,10 +150,16 @@ export function App() {
 
     const preference = connectionPreference;
     let cancelled = false;
-    const shouldConfigureRuntimeProxy = proxyGatewayUrl.startsWith("/");
+    // Only use Vite's runtime proxy API in dev mode with a true proxy path.
+    // In production (embedded in AP), proxyGatewayUrl is always an absolute wss:// URL.
+    const shouldConfigureRuntimeProxy = import.meta.env.DEV && rawGatewayUrl.startsWith("/");
 
     async function syncConnectionTarget() {
-      setConnectionReady(false);
+      // Only reset connectionReady for remote mode — the WS URL actually changes.
+      // For local mode, the proxy target is already correct; resetting causes a race
+      // where the in-flight WebSocket gets closed before it's established.
+      const needsReset = shouldConfigureRuntimeProxy && preference.mode === "remote";
+      if (needsReset) setConnectionReady(false);
       setConnectionSetupError(null);
 
       try {
@@ -180,7 +198,7 @@ export function App() {
     proxyGatewayUrl,
     browserGatewayToken,
     window.location,
-    { preferSameOriginProxy: import.meta.env.DEV && !injected?.gatewayUrl },
+    { preferSameOriginProxy: import.meta.env.DEV && !injected?.gatewayUrl && !import.meta.env.VITE_GATEWAY_URL },
   );
 
   const { wsClient } = useGatewayConnection({

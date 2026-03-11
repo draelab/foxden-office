@@ -51,6 +51,16 @@ export class GatewayWsClient {
   }
 
   connect(url: string, token: string): void {
+    // Guard: if already connecting/connected to the same URL, skip
+    if (this.ws && (this.ws.readyState === WebSocket.CONNECTING || this.ws.readyState === WebSocket.OPEN)) {
+      if (this.url === url) {
+        console.log('[WS-CLIENT] already connecting/connected, skipping');
+        return;
+      }
+      // Different URL - close existing and reconnect
+      this.ws.close();
+    }
+    
     this.url = url;
     this.token = token;
     this.shutdownReceived = false;
@@ -187,10 +197,10 @@ export class GatewayWsClient {
       minProtocol: 1,
       maxProtocol: 3,
       client: {
-        id: "openclaw-control-ui",
+        id: "cli",
         version: "0.1.0",
         platform: "web",
-        mode: "ui",
+        mode: "cli",
       },
       caps: ["tool-events"],
       scopes: ["operator.admin"],

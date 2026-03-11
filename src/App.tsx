@@ -83,7 +83,7 @@ function ThemeSync() {
 
 function ConnectionBootstrap({ message }: { message: string }) {
   return (
-    <div className="flex min-h-screen items-center justify-center bg-[radial-gradient(circle_at_top,#e0f2fe,transparent_35%),linear-gradient(180deg,#f8fafc_0%,#e2e8f0_100%)] px-6 dark:bg-[radial-gradient(circle_at_top,#082f49,transparent_35%),linear-gradient(180deg,#020617_0%,#0f172a_100%)]">
+    <div className="flex min-h-screen items-center justify-center bg-[radial-gradient(circle_at_top,#f5ead0,transparent_35%),linear-gradient(180deg,#fdf6ec_0%,#ede0c8_100%)] px-6 dark:bg-[radial-gradient(circle_at_top,#3d2a1a,transparent_35%),linear-gradient(180deg,#1a1008_0%,#0f0a04_100%)]">
       <div className="flex w-full max-w-md flex-col items-center rounded-3xl border border-white/60 bg-white/80 px-8 py-10 text-center shadow-2xl backdrop-blur dark:border-slate-700/80 dark:bg-slate-900/80">
         <div className="h-10 w-10 animate-spin rounded-full border-2 border-sky-500 border-t-transparent" />
         <p className="mt-4 text-sm text-slate-600 dark:text-slate-300">{message}</p>

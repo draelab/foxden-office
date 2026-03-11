@@ -469,7 +469,7 @@ export const useOfficeStore = create<OfficeStore>()(
           const phId = `placeholder-${phIdx}`;
           const ph: VisualAgent = {
             id: phId,
-            name: `待命-${phIdx}`,
+            name: `Den Fox-${phIdx}`,
             status: "idle",
             position: freeLounge,
             currentTool: null,
@@ -586,7 +586,7 @@ export const useOfficeStore = create<OfficeStore>()(
           if (state.agents.has(phId)) continue;
           const ph: VisualAgent = {
             id: phId,
-            name: `待命-${i}`,
+            name: `Den Fox-${i}`,
             status: "idle",
             position: { ...loungePositions[i] },
             currentTool: null,

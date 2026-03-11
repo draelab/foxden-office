@@ -3,29 +3,29 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 :root {
-  --zone-desk: #e8edf5;
-  --zone-meeting: #e0eaf5;
-  --zone-hotDesk: #e5e8f0;
-  --zone-lounge: #e8e5f0;
-  --zone-stroke: #c8d0dc;
-  --zone-label: #64748b;
-  --dot-tooltip-bg: white;
-  --dot-tooltip-stroke: #d1d5db;
-  --dot-tooltip-text: #374151;
-  --svg-link-color: #60a5fa;
+  --zone-desk: #f0e8d8;
+  --zone-meeting: #e8f0d8;
+  --zone-hotDesk: #ede0c8;
+  --zone-lounge: #f0dfc8;
+  --zone-stroke: #b09070;
+  --zone-label: #7a5c38;
+  --dot-tooltip-bg: #fdf6ec;
+  --dot-tooltip-stroke: #c4a070;
+  --dot-tooltip-text: #4a3010;
+  --svg-link-color: #d97706;
 }
 
 .dark {
-  --zone-desk: #1e293b;
-  --zone-meeting: #1a2744;
-  --zone-hotDesk: #1e2433;
-  --zone-lounge: #231e33;
-  --zone-stroke: #334155;
-  --zone-label: #94a3b8;
-  --dot-tooltip-bg: #1e293b;
-  --dot-tooltip-stroke: #475569;
-  --dot-tooltip-text: #e2e8f0;
-  --svg-link-color: #60a5fa;
+  --zone-desk: #2a1f0f;
+  --zone-meeting: #1a2210;
+  --zone-hotDesk: #251a0c;
+  --zone-lounge: #2a1808;
+  --zone-stroke: #5c3d20;
+  --zone-label: #c4a070;
+  --dot-tooltip-bg: #2a1f0f;
+  --dot-tooltip-stroke: #7a5c38;
+  --dot-tooltip-text: #f0dfc8;
+  --svg-link-color: #f59e0b;
 }
 
 @keyframes pulse {

@@ -5,11 +5,11 @@ import type { ThemeMode } from "@/gateway/types";
 
 const WALL_HEIGHT = 2.8;
 const WALL_THICKNESS = 0.12;
-const FLOOR_COLOR = "#d4dbe6";
-const WALL_COLOR = "#c8d0dc";
-const WALL_EDGE_COLOR = "#9ca8b8";
-const WINDOW_COLOR = "#a8d4f5";
-const WINDOW_EMISSIVE = "#7ec8f0";
+const FLOOR_COLOR = "#c4a882";
+const WALL_COLOR = "#b08858";
+const WALL_EDGE_COLOR = "#7a5c38";
+const WINDOW_COLOR = "#f0c060";
+const WINDOW_EMISSIVE = "#d4942a";
 
 function Wall({
   position,
@@ -164,16 +164,16 @@ function ServerRack({ position }: { position: [number, number, number] }) {
 }
 
 const LIGHT_PARAMS = {
-  ambient: { intensity: 0.65, color: new THREE.Color("#f5f0e8") },
-  main: { intensity: 1.2, color: new THREE.Color("#fff8ee") },
-  fill: { intensity: 0.4, color: new THREE.Color("#dde4f0") },
+  ambient: { intensity: 0.65, color: new THREE.Color("#f5e8c8") },
+  main: { intensity: 1.2, color: new THREE.Color("#ffe8b0") },
+  fill: { intensity: 0.4, color: new THREE.Color("#d4b880") },
   hemi: { intensity: 0.4 },
 } as const;
 
 const DARK_PARAMS = {
-  ambient: { intensity: 0.2, color: new THREE.Color("#1a1a2e") },
-  main: { intensity: 0.4, color: new THREE.Color("#8899bb") },
-  fill: { intensity: 0.15, color: new THREE.Color("#2a2a4a") },
+  ambient: { intensity: 0.2, color: new THREE.Color("#1a1008") },
+  main: { intensity: 0.4, color: new THREE.Color("#c87820") },
+  fill: { intensity: 0.15, color: new THREE.Color("#2a1808") },
   hemi: { intensity: 0.15 },
 } as const;
 

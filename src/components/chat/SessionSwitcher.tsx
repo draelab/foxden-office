@@ -8,7 +8,7 @@ function formatSessionName(key: string): string {
   const parts = key.split(":");
   if (parts.length >= 3 && parts[0] === "agent") {
     const suffix = parts.slice(2).join(":");
-    if (suffix === "main") return parts[1];
+    if (suffix === "main") return parts[1] === "main" ? "AARI" : parts[1];
     return suffix.length > 20 ? suffix.slice(0, 20) + "…" : suffix;
   }
   return key.length > 15 ? key.slice(0, 15) + "…" : key;

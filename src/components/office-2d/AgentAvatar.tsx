@@ -35,7 +35,8 @@ export const AgentAvatar = memo(function AgentAvatar({ agent }: AgentAvatarProps
     agent.id === "agent:main:main"                                    ? "aari-telegram" :
     agent.id.startsWith("agent:discord:")                             ? "aari-discord"  :
     agent.id.startsWith("agent:strix:") || agent.id === "strix"       ? "strix"         :
-    agent.id.startsWith("agent:veth:")  || agent.id === "veth"        ? "veth"          :
+    agent.id.startsWith("agent:veth:")   || agent.id === "veth"        ? "veth"          :
+    agent.id.startsWith("agent:muninn:") || agent.id === "muninn"     ? "muninn"        :
     "generic";
   const groupOpacity = isPlaceholder ? 0.3 : isUnconfirmed ? 0.5 : 1;
 

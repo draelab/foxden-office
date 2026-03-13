@@ -13,7 +13,7 @@
  *   "generic"       — fur/eye color hashed from agentId, neutral expression
  */
 
-export type FoxVariant = "aari-telegram" | "aari-discord" | "generic" | "strix" | "veth";
+export type FoxVariant = "aari-telegram" | "aari-discord" | "generic" | "strix" | "veth" | "muninn";
 
 interface FoxConfig {
   furColor: string;
@@ -250,6 +250,102 @@ function VethFace({ s }: { s: number }) {
   );
 }
 
+// ── Muninn (raven) face ───────────────────────────────────────────────────────
+
+function MuninnFace({ s }: { s: number }) {
+  const body    = "#1a1a2e"; // deep blue-black feathers
+  const sheen   = "#2e2e52"; // iridescent highlight on crown
+  const eyeGray = "#8ba0b8"; // cold steel-blue iris
+  const pupil   = "#050810";
+  const beak    = "#0d0d0d";
+  const beakTip = "#222228";
+
+  return (
+    <g>
+      {/* ── Head crest feathers (behind) ── */}
+      <path
+        d={`M ${-s * 0.18},${-s * 0.72}
+            Q ${-s * 0.28},${-s * 1.10} ${-s * 0.08},${-s * 0.92}
+            Q ${-s * 0.02},${-s * 1.18}  ${s * 0.04},${-s * 0.88}
+            Q  ${s * 0.10},${-s * 1.08}  ${s * 0.20},${-s * 0.72}`}
+        fill={body}
+        opacity={0.95}
+      />
+      {/* Iridescent sheen on crest tips */}
+      <path
+        d={`M ${-s * 0.12},${-s * 0.80} Q ${-s * 0.20},${-s * 1.04} ${-s * 0.04},${-s * 0.88}`}
+        stroke={sheen} strokeWidth={s * 0.025} fill="none" opacity={0.6}
+      />
+      <path
+        d={`M ${s * 0.04},${-s * 0.88} Q ${s * 0.08},${-s * 1.06} ${s * 0.16},${-s * 0.76}`}
+        stroke={sheen} strokeWidth={s * 0.025} fill="none" opacity={0.6}
+      />
+
+      {/* ── Head — round but slightly angular ── */}
+      <ellipse cx={0} cy={0} rx={s * 0.84} ry={s * 0.88} fill={body} />
+
+      {/* ── Iridescent crown sheen ── */}
+      <ellipse cx={0} cy={-s * 0.32} rx={s * 0.46} ry={s * 0.26}
+        fill={sheen} opacity={0.22} />
+
+      {/* ── Feather texture lines on face ── */}
+      <path d={`M ${-s*0.55},${-s*0.30} Q ${-s*0.35},${-s*0.05} ${-s*0.20},${-s*0.28}`}
+        stroke={sheen} strokeWidth={s*0.018} fill="none" opacity={0.25} />
+      <path d={`M ${s*0.55},${-s*0.30} Q ${s*0.35},${-s*0.05} ${s*0.20},${-s*0.28}`}
+        stroke={sheen} strokeWidth={s*0.018} fill="none" opacity={0.25} />
+
+      {/* ── Cold steel-blue eyes — sharp, observing ── */}
+      {/* Socket rings */}
+      <circle cx={-s * 0.30} cy={-s * 0.10} r={s * 0.18} fill={sheen} opacity={0.18} />
+      <circle cx={ s * 0.30} cy={-s * 0.10} r={s * 0.18} fill={sheen} opacity={0.18} />
+      {/* Iris */}
+      <circle cx={-s * 0.30} cy={-s * 0.10} r={s * 0.14} fill={eyeGray} />
+      <circle cx={ s * 0.30} cy={-s * 0.10} r={s * 0.14} fill={eyeGray} />
+      {/* Pupil */}
+      <circle cx={-s * 0.30} cy={-s * 0.10} r={s * 0.07} fill={pupil} />
+      <circle cx={ s * 0.30} cy={-s * 0.10} r={s * 0.07} fill={pupil} />
+      {/* Minimal eye shine — not warm, just precise */}
+      <circle cx={-s * 0.25} cy={-s * 0.15} r={s * 0.03} fill="white" opacity={0.70} />
+      <circle cx={ s * 0.35} cy={-s * 0.15} r={s * 0.03} fill="white" opacity={0.70} />
+
+      {/* ── Strong hooked beak — raven not hawk ── */}
+      {/* Upper mandible */}
+      <path
+        d={`M ${-s * 0.10},${s * 0.12}
+            L ${-s * 0.06},${s * 0.34}
+            Q 0,${s * 0.44} ${s * 0.06},${s * 0.34}
+            L ${s * 0.10},${s * 0.12} Z`}
+        fill={beak}
+      />
+      {/* Hook at tip */}
+      <path
+        d={`M ${-s * 0.06},${s * 0.36}
+            Q 0,${s * 0.48} ${s * 0.04},${s * 0.38}`}
+        fill={beakTip}
+        opacity={0.9}
+      />
+      {/* Lower mandible line */}
+      <path
+        d={`M ${-s * 0.08},${s * 0.18} Q 0,${s * 0.28} ${s * 0.08},${s * 0.18}`}
+        stroke={sheen} strokeWidth={s * 0.015} fill="none" opacity={0.4}
+      />
+
+      {/* ── Runic mark on forehead — Muninn's memory sigil ── */}
+      {/* Simple angular rune: two lines meeting at top like ᚾ simplified */}
+      <path
+        d={`M ${-s * 0.06},${-s * 0.52} L ${-s * 0.06},${-s * 0.34}
+            M ${-s * 0.06},${-s * 0.50} L ${s * 0.06},${-s * 0.40}
+            M ${s * 0.06},${-s * 0.52} L ${s * 0.06},${-s * 0.34}`}
+        stroke="#6b7fa8"
+        strokeWidth={s * 0.028}
+        fill="none"
+        strokeLinecap="round"
+        opacity={0.55}
+      />
+    </g>
+  );
+}
+
 // ── Main component ────────────────────────────────────────────────────────────
 
 interface FoxAvatarFaceProps {
@@ -260,8 +356,9 @@ interface FoxAvatarFaceProps {
 
 export function FoxAvatarFace({ variant, agentId, s }: FoxAvatarFaceProps) {
   // Strix and Veth have their own dedicated face components
-  if (variant === "strix") return <StrixFace s={s} />;
-  if (variant === "veth") return <VethFace s={s} />;
+  if (variant === "strix")  return <StrixFace s={s} />;
+  if (variant === "veth")   return <VethFace s={s} />;
+  if (variant === "muninn") return <MuninnFace s={s} />;
 
   const cfg: FoxConfig =
     variant === "aari-telegram" ? AARI_TELEGRAM :

@@ -8,10 +8,11 @@ interface SvgAvatarProps {
 
 export function SvgAvatar({ agentId, size = 40, className }: SvgAvatarProps) {
   const variant: FoxVariant =
-    agentId === "agent:main:main"        ? "aari-telegram" :
-    agentId.startsWith("agent:discord:") ? "aari-discord"  :
-    agentId.startsWith("agent:strix:")   ? "strix"         :
-    agentId.startsWith("agent:veth:")    ? "veth"          :
+    agentId === "agent:main:main" || agentId === "main" ? "aari-telegram" :
+    agentId.startsWith("agent:discord:")                ? "aari-discord"  :
+    agentId.startsWith("agent:strix:") || agentId === "strix" ? "strix"  :
+    agentId.startsWith("agent:veth:")   || agentId === "veth"   ? "veth"   :
+    agentId.startsWith("agent:muninn:") || agentId === "muninn" ? "muninn" :
     "generic";
 
   // viewBox is 48×48, centered at (24,24); s = 18 gives a comfortable fox
@@ -31,6 +32,7 @@ export function SvgAvatar({ agentId, size = 40, className }: SvgAvatarProps) {
         variant === "aari-discord"  ? "#3d1205" :
         variant === "strix"         ? "#0f1635" :
         variant === "veth"          ? "#1a2535" :
+        variant === "muninn"        ? "#0d0d1a" :
         "#4a3010"
       } />
       {/* Fox face, translated to center of viewBox */}

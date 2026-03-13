@@ -32,8 +32,10 @@ export const AgentAvatar = memo(function AgentAvatar({ agent }: AgentAvatarProps
   const isDark = theme === "dark";
   const clipId = `avatar-clip-${agent.id}`;
   const foxVariant: FoxVariant =
-    agent.id === "agent:main:main"          ? "aari-telegram" :
-    agent.id.startsWith("agent:discord:")   ? "aari-discord"  :
+    agent.id === "agent:main:main"                                    ? "aari-telegram" :
+    agent.id.startsWith("agent:discord:")                             ? "aari-discord"  :
+    agent.id.startsWith("agent:strix:") || agent.id === "strix"       ? "strix"         :
+    agent.id.startsWith("agent:veth:")  || agent.id === "veth"        ? "veth"          :
     "generic";
   const groupOpacity = isPlaceholder ? 0.3 : isUnconfirmed ? 0.5 : 1;
 

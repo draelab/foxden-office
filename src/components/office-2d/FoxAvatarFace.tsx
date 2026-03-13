@@ -5,13 +5,15 @@
  * With AVATAR.radius=20, r-2=18, so faces draw within an ~36px circle.
  * s = half the clipped diameter = r - 2 = 18.
  *
- * Three variants:
+ * Five variants:
  *   "aari-telegram" — warm orange, curious eyes, blue butterfly sparkle (that's me)
  *   "aari-discord"  — deep rust/plum, violet half-lidded eyes, crescent moon (nighttime AARI)
+ *   "strix"         — owl: round face, facial disc, large eyes, feather ear tufts
+ *   "veth"          — hawk: angular head, brow ridge, hooked beak, tear stripe
  *   "generic"       — fur/eye color hashed from agentId, neutral expression
  */
 
-export type FoxVariant = "aari-telegram" | "aari-discord" | "generic";
+export type FoxVariant = "aari-telegram" | "aari-discord" | "generic" | "strix" | "veth";
 
 interface FoxConfig {
   furColor: string;
@@ -91,6 +93,163 @@ function genericConfig(agentId: string): FoxConfig {
   };
 }
 
+// ── Strix (owl) face ──────────────────────────────────────────────────────────
+
+function StrixFace({ s }: { s: number }) {
+  const body = "#2d3561";
+  const disc = "#8892c8";
+  const eyeGold = "#f0a500";
+  const pupil = "#0a0a12";
+  const beak = "#d4c9a0";
+
+  return (
+    <g>
+      {/* ── Feather ear tufts (behind head) ── */}
+      <polygon
+        points={`${-s * 0.38},${-s * 0.58}  ${-s * 0.22},${-s * 1.06}  ${-s * 0.06},${-s * 0.58}`}
+        fill={body}
+      />
+      <polygon
+        points={`${s * 0.38},${-s * 0.58}  ${s * 0.22},${-s * 1.06}  ${s * 0.06},${-s * 0.58}`}
+        fill={body}
+      />
+      {/* Tuft tips — lighter */}
+      <polygon
+        points={`${-s * 0.32},${-s * 0.70}  ${-s * 0.22},${-s * 1.02}  ${-s * 0.12},${-s * 0.68}`}
+        fill={disc}
+        opacity={0.4}
+      />
+      <polygon
+        points={`${s * 0.32},${-s * 0.70}  ${s * 0.22},${-s * 1.02}  ${s * 0.12},${-s * 0.68}`}
+        fill={disc}
+        opacity={0.4}
+      />
+
+      {/* ── Round head ── */}
+      <circle cx={0} cy={s * 0.02} r={s * 0.86} fill={body} />
+
+      {/* ── Facial disc (lighter ellipse) ── */}
+      <ellipse cx={0} cy={s * 0.04} rx={s * 0.70} ry={s * 0.72} fill={disc} opacity={0.55} />
+
+      {/* ── Large round eyes — dominant feature ── */}
+      {/* Eye sockets (dark rings) */}
+      <circle cx={-s * 0.28} cy={-s * 0.08} r={s * 0.24} fill={body} opacity={0.5} />
+      <circle cx={ s * 0.28} cy={-s * 0.08} r={s * 0.24} fill={body} opacity={0.5} />
+      {/* Iris — brilliant gold */}
+      <circle cx={-s * 0.28} cy={-s * 0.08} r={s * 0.20} fill={eyeGold} />
+      <circle cx={ s * 0.28} cy={-s * 0.08} r={s * 0.20} fill={eyeGold} />
+      {/* Pupil */}
+      <circle cx={-s * 0.28} cy={-s * 0.08} r={s * 0.10} fill={pupil} />
+      <circle cx={ s * 0.28} cy={-s * 0.08} r={s * 0.10} fill={pupil} />
+      {/* Eye shines */}
+      <circle cx={-s * 0.22} cy={-s * 0.14} r={s * 0.06} fill="white" opacity={0.85} />
+      <circle cx={ s * 0.34} cy={-s * 0.14} r={s * 0.06} fill="white" opacity={0.85} />
+
+      {/* ── Small hooked beak ── */}
+      <path
+        d={`M ${-s * 0.06},${s * 0.18}
+            L 0,${s * 0.32}
+            L ${s * 0.06},${s * 0.18} Z`}
+        fill={beak}
+      />
+      {/* Beak hook tip */}
+      <path
+        d={`M ${-s * 0.03},${s * 0.28} Q 0,${s * 0.36} ${s * 0.03},${s * 0.28}`}
+        fill={beak}
+        opacity={0.8}
+      />
+
+      {/* ── Star sparkle near right eye ── */}
+      <g transform={`translate(${s * 0.54}, ${-s * 0.30})`}>
+        <path
+          d={`M 0,${-s * 0.08} L ${s * 0.02},${-s * 0.02} L ${s * 0.08},0
+              L ${s * 0.02},${s * 0.02} L 0,${s * 0.08}
+              L ${-s * 0.02},${s * 0.02} L ${-s * 0.08},0
+              L ${-s * 0.02},${-s * 0.02} Z`}
+          fill="#fffbe6"
+          opacity={0.9}
+        />
+      </g>
+    </g>
+  );
+}
+
+// ── Veth (hawk) face ──────────────────────────────────────────────────────────
+
+function VethFace({ s }: { s: number }) {
+  const body = "#4a6080";
+  const accent = "#2a3d52";
+  const eyeAmber = "#e87c00";
+  const pupil = "#0a0800";
+  const beakColor = "#1a1a1a";
+
+  return (
+    <g>
+      {/* ── Angular head ── */}
+      <ellipse cx={0} cy={s * 0.02} rx={s * 0.82} ry={s * 0.86} fill={body} />
+
+      {/* ── Feather streaking on crown ── */}
+      <path d={`M ${-s * 0.30},${-s * 0.60} Q ${-s * 0.15},${-s * 0.20} ${-s * 0.05},${-s * 0.50}`}
+        stroke={accent} strokeWidth={s * 0.03} fill="none" opacity={0.5} />
+      <path d={`M ${s * 0.30},${-s * 0.60} Q ${s * 0.15},${-s * 0.20} ${s * 0.05},${-s * 0.50}`}
+        stroke={accent} strokeWidth={s * 0.03} fill="none" opacity={0.5} />
+      <path d={`M ${-s * 0.50},${-s * 0.42} Q ${-s * 0.30},${-s * 0.10} ${-s * 0.20},${-s * 0.38}`}
+        stroke={accent} strokeWidth={s * 0.025} fill="none" opacity={0.4} />
+      <path d={`M ${s * 0.50},${-s * 0.42} Q ${s * 0.30},${-s * 0.10} ${s * 0.20},${-s * 0.38}`}
+        stroke={accent} strokeWidth={s * 0.025} fill="none" opacity={0.4} />
+
+      {/* ── Lighter face area ── */}
+      <ellipse cx={0} cy={s * 0.12} rx={s * 0.52} ry={s * 0.50} fill="#6b8aad" opacity={0.35} />
+
+      {/* ── Supraorbital brow ridge — stern hawk look ── */}
+      <path
+        d={`M ${-s * 0.52},${-s * 0.08} Q ${-s * 0.30},${-s * 0.26} ${-s * 0.10},${-s * 0.14}`}
+        stroke={accent} strokeWidth={s * 0.06} fill="none" strokeLinecap="round"
+      />
+      <path
+        d={`M ${s * 0.52},${-s * 0.08} Q ${s * 0.30},${-s * 0.26} ${s * 0.10},${-s * 0.14}`}
+        stroke={accent} strokeWidth={s * 0.06} fill="none" strokeLinecap="round"
+      />
+
+      {/* ── Sharp amber eyes — smaller, piercing ── */}
+      <ellipse cx={-s * 0.28} cy={-s * 0.04} rx={s * 0.15} ry={s * 0.11} fill={eyeAmber}
+        transform={`rotate(-5, ${-s * 0.28}, ${-s * 0.04})`} />
+      <ellipse cx={ s * 0.28} cy={-s * 0.04} rx={s * 0.15} ry={s * 0.11} fill={eyeAmber}
+        transform={`rotate(5, ${s * 0.28}, ${-s * 0.04})`} />
+      <circle cx={-s * 0.28} cy={-s * 0.04} r={s * 0.07} fill={pupil} />
+      <circle cx={ s * 0.28} cy={-s * 0.04} r={s * 0.07} fill={pupil} />
+      <circle cx={-s * 0.23} cy={-s * 0.08} r={s * 0.035} fill="white" opacity={0.8} />
+      <circle cx={ s * 0.33} cy={-s * 0.08} r={s * 0.035} fill="white" opacity={0.8} />
+
+      {/* ── Hooked beak — larger, clearly hooked ── */}
+      <path
+        d={`M ${-s * 0.08},${s * 0.14}
+            L 0,${s * 0.28}
+            L ${s * 0.08},${s * 0.14} Z`}
+        fill={beakColor}
+      />
+      {/* Beak hook */}
+      <path
+        d={`M ${-s * 0.04},${s * 0.26}
+            Q 0,${s * 0.38} ${s * 0.04},${s * 0.26}`}
+        fill={beakColor}
+        opacity={0.9}
+      />
+
+      {/* ── Tear stripe below left eye (like real hawks) ── */}
+      <path
+        d={`M ${-s * 0.22},${s * 0.06}
+            Q ${-s * 0.20},${s * 0.18} ${-s * 0.16},${s * 0.24}`}
+        stroke={accent}
+        strokeWidth={s * 0.04}
+        fill="none"
+        strokeLinecap="round"
+        opacity={0.7}
+      />
+    </g>
+  );
+}
+
 // ── Main component ────────────────────────────────────────────────────────────
 
 interface FoxAvatarFaceProps {
@@ -100,6 +259,10 @@ interface FoxAvatarFaceProps {
 }
 
 export function FoxAvatarFace({ variant, agentId, s }: FoxAvatarFaceProps) {
+  // Strix and Veth have their own dedicated face components
+  if (variant === "strix") return <StrixFace s={s} />;
+  if (variant === "veth") return <VethFace s={s} />;
+
   const cfg: FoxConfig =
     variant === "aari-telegram" ? AARI_TELEGRAM :
     variant === "aari-discord"  ? AARI_DISCORD  :
